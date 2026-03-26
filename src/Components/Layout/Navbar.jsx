@@ -11,7 +11,7 @@ export default function Navbar() {
 
   const navLinks = [
     { label: "Home", to: "/" },
-    { label: "Blogs", to: "/sports" },
+    { label: "Blogs", to: "/Blogs" },
     { label: "About Us", to: "/technology" },
     { label: "Contact Us", to: "/entertainment" },
   ];
