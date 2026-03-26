@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
-// Sample data - Nepali Gamers with 3 dummy images each
-const blogsData = [
+// News data with dummy images from picsum.photos
+const newsData = [
   {
-    title: "CarryMinati Plays Apex Legends",
-    category: "Gaming",
+    title: "Nepal defeats India in thrilling cricket match",
+    category: "Sports",
     date: "March 26, 2026",
     images: [
       "https://images.unsplash.com/photo-1601758123927-24e6d4d1c788?auto=format&fit=crop&w=400&q=80",
@@ -14,8 +14,8 @@ const blogsData = [
     desc: "CarryMinati shows his gaming skills and strategies in Apex Legends, entertaining thousands of viewers online.",
   },
   {
-    title: "Kiran Gaming Streams PUBG Mobile",
-    category: "Mobile Gaming",
+    title: "Government announces new education policy for 2026",
+    category: "Politics",
     date: "March 25, 2026",
     images: [
       "https://images.unsplash.com/photo-1605902711622-cfb43c44360b?auto=format&fit=crop&w=400&q=80",
@@ -25,8 +25,8 @@ const blogsData = [
     desc: "Kiran Gaming takes his fans through intense PUBG Mobile battles, showcasing his reflexes and game tactics.",
   },
   {
-    title: "Balen Streams Fortnite Tricks",
-    category: "Gaming Tips",
+    title: "Top 10 tech startups to watch in 2026",
+    category: "Technology",
     date: "March 24, 2026",
     images: [
       "https://images.unsplash.com/photo-1628305320633-cd1231ec2e6f?auto=format&fit=crop&w=400&q=80",
@@ -37,8 +37,7 @@ const blogsData = [
   },
 ];
 
-export default function Blog() {
-  const [search, setSearch] = useState("");
+const categories = ["All News", "Sports", "Politics", "Technology", "Health"];
 
   const filteredBlogs = blogsData.filter((blog) =>
     blog.title.toLowerCase().includes(search.toLowerCase()),
@@ -58,41 +57,52 @@ export default function Blog() {
           />
         </div>
 
-        {/* Blog Grid */}
-        <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {filteredBlogs.map((blog, index) => (
-            <div
-              key={index}
-              className="relative overflow-hidden rounded-3xl shadow-xl group transition-transform transform hover:-translate-y-3 hover:scale-105 duration-500 bg-gray-50"
-            >
-              {/* Multiple Images */}
-              <div className="grid grid-cols-3 gap-2 p-3">
-                {blog.images.map((img, i) => (
-                  <img
-                    key={i}
-                    src={img}
-                    alt={`${blog.title} - ${i + 1}`}
-                    className="w-full h-32 object-cover rounded-2xl transition duration-500 group-hover:brightness-95"
-                  />
-                ))}
+          <h2 className="text-3xl font-bold mb-8 text-left md:text-center">Latest News</h2>
+
+          {/* Category Filter */}
+          <div className="flex flex-wrap justify-start md:justify-center gap-6 mb-12 border-b border-gray-100 pb-4">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`text-sm font-semibold transition-colors ${
+                  activeCategory === cat
+                    ? "text-blue-500 underline underline-offset-8 decoration-2"
+                    : "text-gray-500 hover:text-gray-800"
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* News Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredNews.map((news, index) => (
+            <div key={index} className="group cursor-pointer">
+              {/* Image Container */}
+              <div className="relative overflow-hidden rounded-xl mb-5">
+                <img
+                  src={news.image}
+                  alt={news.title}
+                  className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
+                />
               </div>
 
-              {/* Category Tag */}
-              <span className="absolute top-4 left-[-10px] rotate-[-12deg] bg-red-600 px-3 py-1 text-xs font-bold text-white z-10">
-                {blog.category}
-              </span>
-
-              {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition duration-500 rounded-3xl"></div>
-
-              {/* Content */}
-              <div className="absolute bottom-6 left-6 right-6 z-20">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-gray-500">{blog.date}</span>
-                  <button className="px-4 py-2 text-sm bg-red-600 rounded-lg font-semibold hover:bg-red-700 transition">
-                    Read More
-                  </button>
-                </div>
+              {/* Text Content */}
+              <div className="space-y-3">
+                <h3 className="text-xl font-bold leading-tight group-hover:text-blue-500 transition-colors">
+                  {news.title}
+                </h3>
+                <p className="text-gray-500 text-sm leading-relaxed line-clamp-3">
+                  {news.desc}
+                </p>
+                <button className="text-blue-500 font-bold text-sm flex items-center gap-1 group/btn">
+                  Read Full News
+                  <span className="transition-transform group-hover/btn:translate-x-1">→</span>
+                </button>
+                <p className="text-gray-400 text-xs">{news.date}</p>
               </div>
             </div>
           ))}
