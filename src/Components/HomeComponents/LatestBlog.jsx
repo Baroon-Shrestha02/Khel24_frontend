@@ -1,64 +1,11 @@
 // src/components/LatestNews.jsx
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "motion/react";
+import axios from "axios";
 
-const sampleNews = [
-  {
-    title: "Latest Technology Trends",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione enim libero eveniet corrupti alias error, dignissimos dolores possimus recusandae dolorum adipisci praesentium blanditiis quas labore ullam porro repellendus totam quasi eaque itaque obcaecati iure dicta pariatur minus. Reiciendis, earum dolorem.",
-    tag: "Tech",
-    date: "24 March",
-    author: "Admin",
-    url: "#",
-    image:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80",
-  },
-  {
-    title: "Smart Cities Development",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione enim libero eveniet corrupti alias error, dignissimos dolores possimus recusandae dolorum adipisci praesentium blanditiis quas labore ullam porro repellendus totam quasi eaque itaque obcaecati iure dicta pariatur minus. Reiciendis, earum dolorem.",
-    tag: "Cities",
-    date: "24 March",
-    author: "Admin",
-    url: "#",
-    image:
-      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80",
-  },
-  {
-    title: "Global Sports Updates",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione enim libero eveniet corrupti alias error, dignissimos dolores possimus recusandae dolorum adipisci praesentium blanditiis quas labore ullam porro repellendus totam quasi eaque itaque obcaecati iure dicta pariatur minus. Reiciendis, earum dolorem.",
-    tag: "Sports",
-    date: "24 March",
-    author: "Admin",
-    url: "#",
-    image:
-      "https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=600&q=80",
-  },
-  {
-    title: "Football World Cup Qualifiers",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione enim libero eveniet corrupti alias error, dignissimos dolores possimus recusandae dolorum adipisci praesentium blanditiis quas labore ullam porro repellendus totam quasi eaque itaque obcaecati iure dicta pariatur minus. Reiciendis, earum dolorem.",
-    tag: "Football",
-    date: "24 March",
-    author: "Admin",
-    url: "#",
-    image:
-      "https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=600&q=80",
-  },
-  {
-    title: "Cricket Season Highlights",
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione enim libero eveniet corrupti alias error, dignissimos dolores possimus recusandae dolorum adipisci praesentium blanditiis quas labore ullam porro repellendus totam quasi eaque itaque obcaecati iure dicta pariatur minus. Reiciendis, earum dolorem.",
-    tag: "Cricket",
-    date: "24 March",
-    author: "Admin",
-    url: "#",
-    image:
-      "https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=600&q=80",
-  },
-];
+const api = axios.create({
+  baseURL: `http://localhost:3000/api`, // http://localhost:3000/api
+});
 
 // Tag color map
 const tagColors = {
@@ -71,17 +18,20 @@ const tagColors = {
 
 function NewsCard({
   title,
-  description,
+  summary,
   url,
-  image,
-  author,
-  date,
-  tag,
+  heroImage,
+  createdAt,
+  category,
   index,
 }) {
   const ref = useRef(null);
-  // Only trigger once when card enters viewport
   const isInView = useInView(ref, { once: true, margin: "0px 0px -60px 0px" });
+
+  const formattedDate = new Date(createdAt).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+  });
 
   return (
     <motion.div
@@ -94,25 +44,26 @@ function NewsCard({
         ease: [0.22, 1, 0.36, 1],
       }}
     >
-      <a
-        href={url}
+      <div
+        href={url || "#"}
         className="group block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
       >
         {/* Image */}
         <div className="relative overflow-hidden h-52">
           <img
-            src={image}
+            src={heroImage?.url}
             alt={title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          {/* Tag badge */}
-          <span
-            className={`absolute top-3 left-3 text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
-              tagColors[tag] || "bg-gray-100 text-gray-600"
-            }`}
-          >
-            {tag}
-          </span>
+          {category && (
+            <span
+              className={`absolute top-3 left-3 text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                tagColors[category] || "bg-gray-100 text-gray-600"
+              }`}
+            >
+              {category}
+            </span>
+          )}
         </div>
 
         {/* Content */}
@@ -120,15 +71,13 @@ function NewsCard({
           <h2 className="text-[1.05rem] font-extrabold text-gray-900 leading-snug group-hover:text-[#00569e] transition-colors duration-200 line-clamp-2">
             {title}
           </h2>
-
           <p className="text-gray-500 text-sm leading-relaxed line-clamp-3">
-            {description}
+            {summary}
           </p>
 
           {/* Footer meta */}
           <div className="flex items-center justify-between mt-1 pt-3 border-t border-gray-100">
             <div className="flex items-center gap-1.5 text-xs text-gray-400">
-              {/* Calendar icon */}
               <svg
                 className="w-3.5 h-3.5"
                 fill="none"
@@ -142,11 +91,10 @@ function NewsCard({
                   d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                 />
               </svg>
-              <span>{date}, 2026</span>
+              <span>{formattedDate}</span>
             </div>
 
             <div className="flex items-center gap-1.5 text-xs text-gray-400">
-              {/* Person icon */}
               <svg
                 className="w-3.5 h-3.5"
                 fill="none"
@@ -160,10 +108,9 @@ function NewsCard({
                   d="M5.121 17.804A8.966 8.966 0 0112 15c2.21 0 4.232.797 5.879 2.104M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              <span>{author}</span>
+              <span>Admin</span>
             </div>
 
-            {/* Read more arrow */}
             <span className="flex items-center gap-1 text-xs font-semibold text-[#00569e] group-hover:gap-2 transition-all duration-200">
               Read
               <svg
@@ -182,14 +129,55 @@ function NewsCard({
             </span>
           </div>
         </div>
-      </a>
+      </div>
     </motion.div>
+  );
+}
+
+function SkeletonCard() {
+  return (
+    <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse">
+      <div className="h-52 bg-gray-200" />
+      <div className="p-5 flex flex-col gap-3">
+        <div className="h-4 bg-gray-200 rounded w-3/4" />
+        <div className="h-3 bg-gray-200 rounded w-full" />
+        <div className="h-3 bg-gray-200 rounded w-5/6" />
+        <div className="h-3 bg-gray-200 rounded w-2/3" />
+        <div className="mt-2 pt-3 border-t border-gray-100 flex justify-between">
+          <div className="h-3 bg-gray-200 rounded w-16" />
+          <div className="h-3 bg-gray-200 rounded w-12" />
+          <div className="h-3 bg-gray-200 rounded w-10" />
+        </div>
+      </div>
+    </div>
   );
 }
 
 export default function LatestBlog() {
   const headingRef = useRef(null);
   const headingInView = useInView(headingRef, { once: true });
+
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const { data } = await api.get("/blogs", {
+          params: { status: "published" },
+        });
+        console.log(data);
+        setBlogs(data.data);
+      } catch (err) {
+        setError(err.response?.data?.message || err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
 
   return (
     <section id="news" className="container mx-auto px-4 py-10">
@@ -206,20 +194,36 @@ export default function LatestBlog() {
         </h2>
       </motion.div>
 
+      {error && (
+        <div className="text-center py-10 text-red-500 text-sm">
+          Failed to load blogs: {error}
+        </div>
+      )}
+
+      {!loading && !error && blogs.length === 0 && (
+        <div className="text-center py-10 text-gray-400 text-sm">
+          No blogs published yet.
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sampleNews.map((item, index) => (
-          <NewsCard
-            key={index}
-            index={index}
-            title={item.title}
-            description={item.description}
-            url={item.url}
-            image={item.image}
-            author={item.author}
-            date={item.date}
-            tag={item.tag}
-          />
-        ))}
+        {loading &&
+          Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)}
+
+        {!loading &&
+          !error &&
+          blogs.map((blog, index) => (
+            <NewsCard
+              key={blog._id}
+              index={index}
+              title={blog.title}
+              summary={blog.summary}
+              heroImage={blog.heroImage}
+              category={blog.category}
+              createdAt={blog.createdAt}
+              url={`/blogs/${blog._id}`}
+            />
+          ))}
       </div>
     </section>
   );

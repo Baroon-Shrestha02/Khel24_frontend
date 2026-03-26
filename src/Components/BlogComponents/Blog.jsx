@@ -6,74 +6,56 @@ const newsData = [
     title: "Nepal defeats India in thrilling cricket match",
     category: "Sports",
     date: "March 26, 2026",
-    image: "https://picsum.photos/seed/sports1/600/400",
-    desc: "In an unexpected turn, Nepal won the cricket match against India in a nail-biting finish that left fans ecstatic.",
+    images: [
+      "https://images.unsplash.com/photo-1601758123927-24e6d4d1c788?auto=format&fit=crop&w=400&q=80",
+      "https://images.unsplash.com/photo-1593642634367-d91a135587b5?auto=format&fit=crop&w=400&q=80",
+      "https://images.unsplash.com/photo-1617107632220-f4476e3b17be?auto=format&fit=crop&w=400&q=80",
+    ],
+    desc: "CarryMinati shows his gaming skills and strategies in Apex Legends, entertaining thousands of viewers online.",
   },
   {
     title: "Government announces new education policy for 2026",
     category: "Politics",
     date: "March 25, 2026",
-    image: "https://picsum.photos/seed/politics1/600/400",
-    desc: "The new policy focuses on digital learning, updated curriculum, and improving access to education in rural areas.",
+    images: [
+      "https://images.unsplash.com/photo-1605902711622-cfb43c44360b?auto=format&fit=crop&w=400&q=80",
+      "https://images.unsplash.com/photo-1612831455541-5a32f9350568?auto=format&fit=crop&w=400&q=80",
+      "https://images.unsplash.com/photo-1612832020916-fd2a1fc6b7f1?auto=format&fit=crop&w=400&q=80",
+    ],
+    desc: "Kiran Gaming takes his fans through intense PUBG Mobile battles, showcasing his reflexes and game tactics.",
   },
   {
     title: "Top 10 tech startups to watch in 2026",
     category: "Technology",
     date: "March 24, 2026",
-    image: "https://picsum.photos/seed/tech1/600/400",
-    desc: "These startups are innovating in AI, blockchain, and green technology, promising major industry disruption.",
-  },
-  {
-    title: "Health ministry issues alert on seasonal flu",
-    category: "Health",
-    date: "March 23, 2026",
-    image: "https://picsum.photos/seed/health1/600/400",
-    desc: "Citizens are advised to take precautions and get vaccinated as flu cases rise across the country.",
-  },
-  {
-    title: "Football league finals scheduled for April",
-    category: "Sports",
-    date: "March 22, 2026",
-    image: "https://picsum.photos/seed/sports2/600/400",
-    desc: "The national football league will hold its finals in April, promising an exciting showdown between top teams.",
+    images: [
+      "https://images.unsplash.com/photo-1628305320633-cd1231ec2e6f?auto=format&fit=crop&w=400&q=80",
+      "https://images.unsplash.com/photo-1612831455541-5a32f9350568?auto=format&fit=crop&w=400&q=80",
+      "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=400&q=80",
+    ],
+    desc: "Balen shares advanced Fortnite building tricks and gameplay insights for aspiring gamers.",
   },
 ];
 
 const categories = ["All News", "Sports", "Politics", "Technology", "Health"];
 
-export default function Home() {
-  const [activeCategory, setActiveCategory] = useState("All News");
-  const [email, setEmail] = useState("");
-
-  const filteredNews =
-    activeCategory === "All News"
-      ? newsData
-      : newsData.filter((news) => news.category === activeCategory);
+  const filteredBlogs = blogsData.filter((blog) =>
+    blog.title.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
-    <section className="bg-white text-gray-900 py-20 px-6 font-sans">
-      <div className="max-w-6xl mx-auto">
-        
-        {/* Header Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">KhelKhabar News Portal</h1>
-          <p className="text-gray-500 mb-8">
-            Subscribe to get the latest news updates and trending stories across sports, politics, and technology
-          </p>
-
-          {/* Subscription Input */}
-          <div className="relative max-w-lg mx-auto mb-20">
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              className="w-full pl-6 pr-32 py-4 bg-white border border-gray-200 rounded-full shadow-sm outline-none focus:ring-2 focus:ring-blue-500"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <button className="absolute right-2 top-2 bottom-2 px-8 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full transition-all">
-              Subscribe
-            </button>
-          </div>
+    <section className="bg-white text-gray-900 py-16 px-6 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        {/* Search Input */}
+        <div className="text-center mb-16">
+          <input
+            type="text"
+            placeholder="Search blogs..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="mt-4 px-4 py-3 rounded-lg text-gray-900 w-full md:w-96 outline-none shadow-md"
+          />
+        </div>
 
           <h2 className="text-3xl font-bold mb-8 text-left md:text-center">Latest News</h2>
 

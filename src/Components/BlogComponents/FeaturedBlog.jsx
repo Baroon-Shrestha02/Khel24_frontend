@@ -5,24 +5,28 @@ export default function FeaturedBlog() {
     title: "Epic Football Clash Ends in Last-Minute Goal",
     category: "Football",
     date: "March 26, 2026",
-    image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=800&q=80",
     desc: "A dramatic finish shocked fans as the underdogs secured victory in the final seconds of the match.",
   };
 
   const sideBlogs = [
     {
       title: "Cricket World Cup Highlights",
-      image: "https://images.unsplash.com/photo-1593766827228-8737b4534aa6?auto=format&fit=crop&w=400&q=80",
+      image:
+        "https://images.unsplash.com/photo-1593766827228-8737b4534aa6?auto=format&fit=crop&w=400&q=80",
       date: "March 25, 2026",
     },
     {
       title: "NBA Playoffs Heat Up",
-      image: "https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&w=400&q=80",
+      image:
+        "https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&w=400&q=80",
       date: "March 24, 2026",
     },
     {
       title: "Tennis Grand Slam Victory",
-      image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&q=80",
+      image:
+        "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=400&q=80",
       date: "March 23, 2026",
     },
   ];
@@ -50,12 +54,16 @@ export default function FeaturedBlog() {
                 {featured.category}
               </span>
 
-              <h3 className="text-2xl font-bold mt-2 text-gray-900">{featured.title}</h3>
+              <h3 className="text-2xl font-bold mt-2 text-gray-900">
+                {featured.title}
+              </h3>
 
               <p className="text-gray-700 mt-2 text-sm">{featured.desc}</p>
               
 
-              <span className="text-xs text-gray-500 block mt-3">{featured.date}</span>
+              <span className="text-xs text-gray-500 block mt-3">
+                {featured.date}
+              </span>
             </div>
           </div>
 
@@ -73,7 +81,9 @@ export default function FeaturedBlog() {
                 />
 
                 <div className="p-3">
-                  <h4 className="text-sm font-semibold text-gray-900">{blog.title}</h4>
+                  <h4 className="text-sm font-semibold text-gray-900">
+                    {blog.title}
+                  </h4>
                   <span className="text-xs text-gray-500">{blog.date}</span>
                 </div>
               </div>
