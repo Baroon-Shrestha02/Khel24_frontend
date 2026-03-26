@@ -21,6 +21,29 @@ const FOOTBALL = {
   stats: { shots: 5, possession: 62, corners: 3 },
 };
 
+// ─── Cricket match data ────────────────────────────────────────────────────────
+const CRICKET_INIT = {
+  id: "c1",
+  competition: "ICC Test · Day 3",
+  over: 52,
+  ball: 3,
+  batting: {
+    team: "India",
+    innings: "1st innings",
+    runs: 312,
+    wickets: 4,
+    b1: { name: "Kohli", runs: 87, balls: 143 },
+    b2: { name: "Jadeja", runs: 34, balls: 51 },
+  },
+  bowling: {
+    team: "England",
+    bowler: "Anderson",
+    figures: "12-2-38-1",
+  },
+  fours: 28,
+  sixes: 7,
+};
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -146,6 +169,219 @@ function FootballCard({ data }) {
   );
 }
 
+// ─── Cricket Card ──────────────────────────────────────────────────────────────
+function CricketCard({ data }) {
+  const [state, setState] = useState(data);
+
+  useEffect(() => {
+    const t = setInterval(() => {
+      setState((prev) => {
+        let { over, ball, batting, fours, sixes } = prev;
+        ball++;
+        if (ball > 6) {
+          ball = 1;
+          over++;
+        }
+
+        const runs = rand(0, 6);
+        let newFours = fours,
+          newSixes = sixes;
+        let b1 = { ...batting.b1 },
+          b2 = { ...batting.b2 };
+        let totalRuns = batting.runs,
+          wickets = batting.wickets;
+
+        if (runs === 4) newFours++;
+        if (runs === 6) newSixes++;
+
+        if (runs === 0 && Math.random() < 0.07 && wickets < 10) {
+          wickets++;
+        } else {
+          totalRuns += runs;
+          if (Math.random() < 0.5) {
+            b1.runs += runs;
+            b1.balls++;
+          } else {
+            b2.runs += runs;
+            b2.balls++;
+          }
+        }
+
+        const crr = (totalRuns / (over + ball / 6)).toFixed(2);
+        return {
+          ...prev,
+          over,
+          ball,
+          fours: newFours,
+          sixes: newSixes,
+          crr,
+          batting: { ...batting, runs: totalRuns, wickets, b1, b2 },
+        };
+      });
+    }, 2500);
+    return () => clearInterval(t);
+  }, []);
+
+  const { over, ball, batting, bowling, fours, sixes, crr } = state;
+
+  return (
+    <div className="rounded-2xl bg-[#0f0d1f] border border-[rgba(139,120,255,0.15)] hover:border-[rgba(139,120,255,0.38)] transition-all duration-300 hover:-translate-y-px overflow-hidden cursor-pointer">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.05]">
+        <span className="text-[10px] font-medium tracking-widest uppercase text-[#6b648a]">
+          🏏 {state.competition}
+        </span>
+        <div className="flex items-center gap-1.5">
+          <PulseDot color="#f59e0b" />
+          <span className="text-[11px] font-medium text-amber-400">
+            Ov {over}.{ball}
+          </span>
+        </div>
+      </div>
+
+      {/* Batting team */}
+      <div className="px-4 pt-3.5">
+        <div className="flex items-center justify-between mb-2.5">
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-9 h-9 rounded-[10px] flex items-center justify-center border"
+              style={{
+                background: "rgba(34,197,94,0.10)",
+                borderColor: "rgba(34,197,94,0.25)",
+              }}
+            >
+              <span className="text-xs font-semibold text-green-400">IND</span>
+            </div>
+            <div>
+              <span className="text-[13px] font-medium text-[#e2deff]">
+                {batting.team}
+              </span>
+              <span className="text-[10px] text-[#6b648a] ml-1.5">batting</span>
+            </div>
+          </div>
+          <div className="text-right">
+            <span className="text-[22px] font-bold text-white tabular-nums">
+              {batting.runs}
+            </span>
+            <span className="text-[13px] text-[#6b648a]">/</span>
+            <span className="text-[15px] font-medium text-[#a395ff]">
+              {batting.wickets}
+            </span>
+            <div className="text-[10px] text-[#6b648a]">{batting.innings}</div>
+          </div>
+        </div>
+
+        {/* Batters */}
+        <div
+          className="rounded-[10px] mb-3 px-3 py-2"
+          style={{
+            background: "rgba(139,120,255,0.06)",
+            border: "0.5px solid rgba(139,120,255,0.12)",
+          }}
+        >
+          <div className="flex justify-between items-center mb-1.5">
+            <span className="text-[10px] text-[#6b648a] tracking-wider">
+              AT CREASE
+            </span>
+            <div className="flex gap-4">
+              {["R", "B", "SR"].map((h) => (
+                <span
+                  key={h}
+                  className="text-[10px] text-[#6b648a] w-6 text-right"
+                >
+                  {h}
+                </span>
+              ))}
+            </div>
+          </div>
+          {[batting.b1, batting.b2].map((b, i) => (
+            <div
+              key={i}
+              className="flex justify-between items-center mb-1 last:mb-0"
+            >
+              <div className="flex items-center gap-1.5">
+                {i === 0 && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
+                )}
+                <span
+                  className={`text-[12px] font-medium ${i === 0 ? "text-[#e2deff]" : "text-[#c4bce0] ml-3"}`}
+                >
+                  {b.name}
+                </span>
+              </div>
+              <div className="flex gap-4">
+                <span className="text-[12px] font-medium text-[#e2deff] w-6 text-right">
+                  {b.runs}
+                </span>
+                <span className="text-[12px] text-[#8a83a8] w-6 text-right">
+                  {b.balls}
+                </span>
+                <span className="text-[12px] text-[#8a83a8] w-6 text-right">
+                  {b.balls > 0 ? ((b.runs / b.balls) * 100).toFixed(1) : "0.0"}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Bowling team */}
+      <div className="px-4 pb-0">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-9 h-9 rounded-[10px] flex items-center justify-center border"
+              style={{
+                background: "rgba(59,130,246,0.10)",
+                borderColor: "rgba(59,130,246,0.25)",
+              }}
+            >
+              <span className="text-xs font-semibold text-blue-400">ENG</span>
+            </div>
+            <div>
+              <span className="text-[13px] font-medium text-[#e2deff]">
+                {bowling.team}
+              </span>
+              <span className="text-[10px] text-[#6b648a] ml-1.5">bowling</span>
+            </div>
+          </div>
+          <div className="text-right">
+            <span className="text-[12px] font-medium text-[#c4bce0]">
+              {bowling.bowler}
+            </span>
+            <div className="text-[10px] text-[#6b648a]">{bowling.figures}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats bar */}
+      <div
+        className="grid border-t border-white/[0.05] py-2.5"
+        style={{ gridTemplateColumns: "1fr 1px 1fr 1px 1fr" }}
+      >
+        {[
+          { v: crr ?? "6.02", l: "CRR" },
+          { v: null },
+          { v: fours, l: "Fours" },
+          { v: null },
+          { v: sixes, l: "Sixes" },
+        ].map((s, i) =>
+          s.v === null ? (
+            <div key={i} className="bg-white/[0.05]" />
+          ) : (
+            <div key={i} className="flex flex-col items-center gap-0.5">
+              <span className="text-[13px] font-medium text-[#e2deff]">
+                {s.v}
+              </span>
+              <span className="text-[10px] text-[#6b648a]">{s.l}</span>
+            </div>
+          ),
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Sidebar ───────────────────────────────────────────────────────────────────
 export default function LiveScoreSidebar() {
   const [time, setTime] = useState(new Date());
@@ -155,7 +391,7 @@ export default function LiveScoreSidebar() {
   }, []);
 
   return (
-    <aside className="w-full md:w-80 shrink-0">
+    <aside className="w-full md:w-80 shrink-0 mt-2 container mx-auto md:mx-2">
       <div className="sticky top-4 flex flex-col gap-3 p-4 rounded-2xl bg-[#080715] text-white">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-medium">
@@ -175,6 +411,11 @@ export default function LiveScoreSidebar() {
           <span className="text-[11px] font-medium text-[#a395ff] tracking-wider">
             2 matches live
           </span>
+        </div>
+
+        <div className="flex flex-col gap-2.5">
+          <FootballCard data={FOOTBALL} />
+          <CricketCard data={{ ...CRICKET_INIT, crr: "6.02" }} />
         </div>
       </div>
     </aside>

@@ -9,7 +9,7 @@ const blogsData = [
     images: [
       "https://images.unsplash.com/photo-1601758123927-24e6d4d1c788?auto=format&fit=crop&w=400&q=80",
       "https://images.unsplash.com/photo-1593642634367-d91a135587b5?auto=format&fit=crop&w=400&q=80",
-      "https://images.unsplash.com/photo-1617107632220-f4476e3b17be?auto=format&fit=crop&w=400&q=80"
+      "https://images.unsplash.com/photo-1617107632220-f4476e3b17be?auto=format&fit=crop&w=400&q=80",
     ],
     desc: "CarryMinati shows his gaming skills and strategies in Apex Legends, entertaining thousands of viewers online.",
   },
@@ -20,7 +20,7 @@ const blogsData = [
     images: [
       "https://images.unsplash.com/photo-1605902711622-cfb43c44360b?auto=format&fit=crop&w=400&q=80",
       "https://images.unsplash.com/photo-1612831455541-5a32f9350568?auto=format&fit=crop&w=400&q=80",
-      "https://images.unsplash.com/photo-1612832020916-fd2a1fc6b7f1?auto=format&fit=crop&w=400&q=80"
+      "https://images.unsplash.com/photo-1612832020916-fd2a1fc6b7f1?auto=format&fit=crop&w=400&q=80",
     ],
     desc: "Kiran Gaming takes his fans through intense PUBG Mobile battles, showcasing his reflexes and game tactics.",
   },
@@ -31,7 +31,7 @@ const blogsData = [
     images: [
       "https://images.unsplash.com/photo-1628305320633-cd1231ec2e6f?auto=format&fit=crop&w=400&q=80",
       "https://images.unsplash.com/photo-1612831455541-5a32f9350568?auto=format&fit=crop&w=400&q=80",
-      "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=400&q=80"
+      "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=400&q=80",
     ],
     desc: "Balen shares advanced Fortnite building tricks and gameplay insights for aspiring gamers.",
   },
@@ -41,13 +41,12 @@ export default function Blog() {
   const [search, setSearch] = useState("");
 
   const filteredBlogs = blogsData.filter((blog) =>
-    blog.title.toLowerCase().includes(search.toLowerCase())
+    blog.title.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <section className="bg-white text-gray-900 py-16 px-6 min-h-screen">
       <div className="max-w-7xl mx-auto">
-
         {/* Search Input */}
         <div className="text-center mb-16">
           <input

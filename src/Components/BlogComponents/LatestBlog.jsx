@@ -6,55 +6,39 @@ export default function LatestBlog() {
       title: "Messi Scores Stunning Goal",
       category: "Football",
       date: "March 26, 2026",
-      image: "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=800&q=80",
       desc: "Lionel Messi dazzled fans with a breathtaking goal in the final minutes.",
     },
     {
       title: "Virat Kohli Century Leads Team",
       category: "Cricket",
       date: "March 25, 2026",
-      image: "https://images.unsplash.com/photo-1593766827228-8737b4534aa6?auto=format&fit=crop&w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1593766827228-8737b4534aa6?auto=format&fit=crop&w=800&q=80",
       desc: "Kohli’s brilliant century helped India secure a commanding win.",
     },
     {
       title: "Lakers Dominate NBA Finals",
       category: "Basketball",
       date: "March 24, 2026",
-      image: "https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&w=800&q=80",
+      image:
+        "https://images.unsplash.com/photo-1504450758481-7338eba7524a?auto=format&fit=crop&w=800&q=80",
       desc: "The Lakers showcased incredible teamwork and strategy in the playoffs.",
-    },
-    {
-      title: "Djokovic Wins Grand Slam",
-      category: "Tennis",
-      date: "March 23, 2026",
-      image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=800&q=80",
-      desc: "Novak Djokovic claimed another Grand Slam title after an intense match.",
-    },
-    {
-      title: "Esports Championship Highlights",
-      category: "Esports",
-      date: "March 22, 2026",
-      image: "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=800&q=80",
-      desc: "Top teams competed fiercely in the international esports tournament.",
-    },
-    {
-      title: "Champions League Thriller",
-      category: "Football",
-      date: "March 21, 2026",
-      image: "https://images.unsplash.com/photo-1603072148888-7d07b508c6e5?auto=format&fit=crop&w=800&q=80",
-      desc: "A dramatic Champions League match kept fans on the edge until the end.",
     },
   ];
 
   return (
     <section className="bg-white text-gray-900 py-16 px-6 min-h-screen">
       <div className="max-w-7xl mx-auto">
-
         {/* Section Heading */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-extrabold mb-2 tracking-wide">Latest News & Updates</h2>
+          <h2 className="text-4xl font-extrabold mb-2 tracking-wide">
+            Latest News & Updates
+          </h2>
           <p className="text-gray-600 max-w-xl mx-auto">
-            Catch the hottest sports updates, trending stories, and match highlights from around the world.
+            Catch the hottest sports updates, trending stories, and match
+            highlights from around the world.
           </p>
         </div>
 
@@ -71,7 +55,6 @@ export default function LatestBlog() {
                 className="w-full h-72 sm:h-64 md:h-72 object-cover rounded-t-3xl transform group-hover:scale-105 transition duration-500"
               />
 
-              {/* Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-500 rounded-t-3xl"></div>
 
               {/* Content */}
@@ -98,7 +81,6 @@ export default function LatestBlog() {
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );
