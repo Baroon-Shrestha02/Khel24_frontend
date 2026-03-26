@@ -53,6 +53,7 @@ export default function FeaturedBlog() {
               <h3 className="text-2xl font-bold mt-2 text-gray-900">{featured.title}</h3>
 
               <p className="text-gray-700 mt-2 text-sm">{featured.desc}</p>
+              
 
               <span className="text-xs text-gray-500 block mt-3">{featured.date}</span>
             </div>
