@@ -55,6 +55,7 @@ export default function Navbar() {
       {/* ── Bottom Row: Nav + Search ── */}
       <div className="bg-[#00569e]">
         <div className="flex items-center justify-between container mx-auto">
+          <div className="h-8 w-8 bg-red-500"> for stor</div>
           {/* Nav Links — desktop */}
           <ul className="hidden md:flex items-center">
             {navLinks.map((link) => (
@@ -189,7 +190,6 @@ export default function Navbar() {
                 strokeLinejoin="round"
                 strokeWidth={2}
                 d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"
-            
               />
             </svg>
             <input
