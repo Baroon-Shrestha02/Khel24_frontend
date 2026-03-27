@@ -13,7 +13,7 @@ export default function Navbar() {
     { label: "Home", to: "/" },
     { label: "Blogs", to: "/Blogs" },
     { label: "About Us", to: "/technology" },
-    { label: "Contact Us", to: "/entertainment" },
+    { label: "Contact Us", to: "/contact" },
   ];
 
   const isActive = (to) => location.pathname === to;

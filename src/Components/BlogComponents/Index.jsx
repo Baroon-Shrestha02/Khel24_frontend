@@ -8,7 +8,7 @@ export default function Index() {
     <>
       <FeaturedBlog />
       <LatestBlog />
-      {/* <Blog /> */}
+      <Blog />
     </>
   );
 }

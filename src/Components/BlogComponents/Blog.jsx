@@ -1,46 +1,57 @@
 import React, { useState } from "react";
 
-// News data with dummy images from picsum.photos
+// News data with dummy images
 const newsData = [
   {
     title: "Nepal defeats India in thrilling cricket match",
     category: "Sports",
     date: "March 26, 2026",
     images: [
-      "https://images.unsplash.com/photo-1601758123927-24e6d4d1c788?auto=format&fit=crop&w=400&q=80",
-      "https://images.unsplash.com/photo-1593642634367-d91a135587b5?auto=format&fit=crop&w=400&q=80",
-      "https://images.unsplash.com/photo-1617107632220-f4476e3b17be?auto=format&fit=crop&w=400&q=80",
+      "https://picsum.photos/seed/sports1/600/400",
+      "https://picsum.photos/seed/sports2/600/400",
+      "https://picsum.photos/seed/sports3/600/400",
     ],
-    desc: "CarryMinati shows his gaming skills and strategies in Apex Legends, entertaining thousands of viewers online.",
+    desc: "Nepal won the cricket match against India in a nail-biting finish that left fans ecstatic.",
   },
   {
     title: "Government announces new education policy for 2026",
     category: "Politics",
     date: "March 25, 2026",
     images: [
-      "https://images.unsplash.com/photo-1605902711622-cfb43c44360b?auto=format&fit=crop&w=400&q=80",
-      "https://images.unsplash.com/photo-1612831455541-5a32f9350568?auto=format&fit=crop&w=400&q=80",
-      "https://images.unsplash.com/photo-1612832020916-fd2a1fc6b7f1?auto=format&fit=crop&w=400&q=80",
+      "https://picsum.photos/seed/politics1/600/400",
+      "https://picsum.photos/seed/politics2/600/400",
+      "https://picsum.photos/seed/politics3/600/400",
     ],
-    desc: "Kiran Gaming takes his fans through intense PUBG Mobile battles, showcasing his reflexes and game tactics.",
+    desc: "The new policy focuses on digital learning, updated curriculum, and improving access to education in rural areas.",
   },
   {
     title: "Top 10 tech startups to watch in 2026",
     category: "Technology",
     date: "March 24, 2026",
     images: [
-      "https://images.unsplash.com/photo-1628305320633-cd1231ec2e6f?auto=format&fit=crop&w=400&q=80",
-      "https://images.unsplash.com/photo-1612831455541-5a32f9350568?auto=format&fit=crop&w=400&q=80",
-      "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=400&q=80",
+      "https://picsum.photos/seed/tech1/600/400",
+      "https://picsum.photos/seed/tech2/600/400",
+      "https://picsum.photos/seed/tech3/600/400",
     ],
-    desc: "Balen shares advanced Fortnite building tricks and gameplay insights for aspiring gamers.",
+    desc: "These startups are innovating in AI, blockchain, and green technology, promising major industry disruption.",
   },
 ];
 
 const categories = ["All News", "Sports", "Politics", "Technology", "Health"];
 
-  const filteredBlogs = blogsData.filter((blog) =>
-    blog.title.toLowerCase().includes(search.toLowerCase()),
+export default function Blog() {
+  const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All News");
+
+  // Filter by category first
+  const categoryFiltered =
+    activeCategory === "All News"
+      ? newsData
+      : newsData.filter((news) => news.category === activeCategory);
+
+  // Filter by search
+  const filteredNews = categoryFiltered.filter((news) =>
+    news.title.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -57,34 +68,35 @@ const categories = ["All News", "Sports", "Politics", "Technology", "Health"];
           />
         </div>
 
-          <h2 className="text-3xl font-bold mb-8 text-left md:text-center">Latest News</h2>
+        <h2 className="text-3xl font-bold mb-8 text-left md:text-center">
+          Latest News
+        </h2>
 
-          {/* Category Filter */}
-          <div className="flex flex-wrap justify-start md:justify-center gap-6 mb-12 border-b border-gray-100 pb-4">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`text-sm font-semibold transition-colors ${
-                  activeCategory === cat
-                    ? "text-blue-500 underline underline-offset-8 decoration-2"
-                    : "text-gray-500 hover:text-gray-800"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-start md:justify-center gap-6 mb-12 border-b border-gray-100 pb-4">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`text-sm font-semibold transition-colors ${
+                activeCategory === cat
+                  ? "text-blue-500 underline underline-offset-8 decoration-2"
+                  : "text-gray-500 hover:text-gray-800"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
 
         {/* News Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredNews.map((news, index) => (
             <div key={index} className="group cursor-pointer">
-              {/* Image Container */}
+              {/* Image Container (show first image from images array) */}
               <div className="relative overflow-hidden rounded-xl mb-5">
                 <img
-                  src={news.image}
+                  src={news.images[0]}
                   alt={news.title}
                   className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-105"
                 />
@@ -100,7 +112,9 @@ const categories = ["All News", "Sports", "Politics", "Technology", "Health"];
                 </p>
                 <button className="text-blue-500 font-bold text-sm flex items-center gap-1 group/btn">
                   Read Full News
-                  <span className="transition-transform group-hover/btn:translate-x-1">→</span>
+                  <span className="transition-transform group-hover/btn:translate-x-1">
+                    →
+                  </span>
                 </button>
                 <p className="text-gray-400 text-xs">{news.date}</p>
               </div>
