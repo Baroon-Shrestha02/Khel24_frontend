@@ -1,20 +1,43 @@
-// src/components/LatestNews.jsx
 import React, { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "motion/react";
-import axios from "axios";
+import Skeleton from "react-loading-skeleton";
+import {
+  fetchPublishedBlogs,
+  fetchSideBlogs,
+} from "../../Services/BlogServices";
 
-const api = axios.create({
-  baseURL: `http://localhost:3000/api`, // http://localhost:3000/api
-});
+// category icons
+import { IoFootball } from "react-icons/io5";
+import { MdSportsCricket, MdBusiness, MdInsertDriveFile } from "react-icons/md";
 
-// Tag color map
-const tagColors = {
-  Tech: "bg-blue-100 text-blue-700",
-  Cities: "bg-emerald-100 text-emerald-700",
-  Sports: "bg-orange-100 text-orange-700",
-  Football: "bg-red-100 text-red-700",
-  Cricket: "bg-yellow-100 text-yellow-700",
+// meta icons
+import { FiCalendar, FiUser, FiArrowRight } from "react-icons/fi";
+
+const categoryConfig = {
+  Football: {
+    icon: <IoFootball className="w-3.5 h-3.5" />,
+    bg: "bg-green-50",
+    text: "text-green-700",
+  },
+  Cricket: {
+    icon: <MdSportsCricket className="w-3.5 h-3.5" />,
+    bg: "bg-yellow-50",
+    text: "text-yellow-700",
+  },
+  org: {
+    icon: <MdBusiness className="w-3.5 h-3.5" />,
+    bg: "bg-blue-50",
+    text: "text-blue-700",
+  },
+  other: {
+    icon: <MdInsertDriveFile className="w-3.5 h-3.5" />,
+    bg: "bg-gray-50",
+    text: "text-gray-600",
+  },
 };
+
+const getCategoryConfig = (category) =>
+  categoryConfig[category] || categoryConfig.other;
 
 function NewsCard({
   title,
@@ -27,6 +50,7 @@ function NewsCard({
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "0px 0px -60px 0px" });
+  const config = getCategoryConfig(category);
 
   const formattedDate = new Date(createdAt).toLocaleDateString("en-US", {
     day: "numeric",
@@ -44,7 +68,7 @@ function NewsCard({
         ease: [0.22, 1, 0.36, 1],
       }}
     >
-      <div
+      <a
         href={url || "#"}
         className="group block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
       >
@@ -57,10 +81,9 @@ function NewsCard({
           />
           {category && (
             <span
-              className={`absolute top-3 left-3 text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
-                tagColors[category] || "bg-gray-100 text-gray-600"
-              }`}
+              className={`absolute top-3 left-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${config.bg} ${config.text}`}
             >
+              {config.icon}
               {category}
             </span>
           )}
@@ -78,75 +101,37 @@ function NewsCard({
           {/* Footer meta */}
           <div className="flex items-center justify-between mt-1 pt-3 border-t border-gray-100">
             <div className="flex items-center gap-1.5 text-xs text-gray-400">
-              <svg
-                className="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                />
-              </svg>
+              <FiCalendar className="w-3.5 h-3.5" />
               <span>{formattedDate}</span>
             </div>
 
             <div className="flex items-center gap-1.5 text-xs text-gray-400">
-              <svg
-                className="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5.121 17.804A8.966 8.966 0 0112 15c2.21 0 4.232.797 5.879 2.104M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
+              <FiUser className="w-3.5 h-3.5" />
               <span>Admin</span>
             </div>
 
             <span className="flex items-center gap-1 text-xs font-semibold text-[#00569e] group-hover:gap-2 transition-all duration-200">
               Read
-              <svg
-                className="w-3.5 h-3.5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 8l4 4m0 0l-4 4m4-4H3"
-                />
-              </svg>
+              <FiArrowRight className="w-3.5 h-3.5" />
             </span>
           </div>
         </div>
-      </div>
+      </a>
     </motion.div>
   );
 }
 
 function SkeletonCard() {
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse">
-      <div className="h-52 bg-gray-200" />
+    <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+      <Skeleton height={208} borderRadius={0} />
       <div className="p-5 flex flex-col gap-3">
-        <div className="h-4 bg-gray-200 rounded w-3/4" />
-        <div className="h-3 bg-gray-200 rounded w-full" />
-        <div className="h-3 bg-gray-200 rounded w-5/6" />
-        <div className="h-3 bg-gray-200 rounded w-2/3" />
+        <Skeleton height={18} width="75%" />
+        <Skeleton height={14} count={3} />
         <div className="mt-2 pt-3 border-t border-gray-100 flex justify-between">
-          <div className="h-3 bg-gray-200 rounded w-16" />
-          <div className="h-3 bg-gray-200 rounded w-12" />
-          <div className="h-3 bg-gray-200 rounded w-10" />
+          <Skeleton height={12} width={64} />
+          <Skeleton height={12} width={48} />
+          <Skeleton height={12} width={40} />
         </div>
       </div>
     </div>
@@ -164,10 +149,7 @@ export default function LatestBlog() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const { data } = await api.get("/blogs", {
-          params: { status: "published" },
-        });
-        console.log(data);
+        const { data } = await fetchSideBlogs();
         setBlogs(data.data);
       } catch (err) {
         setError(err.response?.data?.message || err.message);
@@ -175,7 +157,6 @@ export default function LatestBlog() {
         setLoading(false);
       }
     };
-
     fetchBlogs();
   }, []);
 
