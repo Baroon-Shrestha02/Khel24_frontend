@@ -3,6 +3,42 @@ import React, { useState } from "react";
 const NewsSection = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All News");
+// News data with dummy images
+const newsData = [
+  {
+    title: "Nepal defeats India in thrilling cricket match",
+    category: "Sports",
+    date: "March 26, 2026",
+    images: [
+      "https://picsum.photos/seed/sports1/600/400",
+      "https://picsum.photos/seed/sports2/600/400",
+      "https://picsum.photos/seed/sports3/600/400",
+    ],
+    desc: "Nepal won the cricket match against India in a nail-biting finish that left fans ecstatic.",
+  },
+  {
+    title: "Government announces new education policy for 2026",
+    category: "Politics",
+    date: "March 25, 2026",
+    images: [
+      "https://picsum.photos/seed/politics1/600/400",
+      "https://picsum.photos/seed/politics2/600/400",
+      "https://picsum.photos/seed/politics3/600/400",
+    ],
+    desc: "The new policy focuses on digital learning, updated curriculum, and improving access to education in rural areas.",
+  },
+  {
+    title: "Top 10 tech startups to watch in 2026",
+    category: "Technology",
+    date: "March 24, 2026",
+    images: [
+      "https://picsum.photos/seed/tech1/600/400",
+      "https://picsum.photos/seed/tech2/600/400",
+      "https://picsum.photos/seed/tech3/600/400",
+    ],
+    desc: "These startups are innovating in AI, blockchain, and green technology, promising major industry disruption.",
+  },
+];
 
   const newsData = [
     {
@@ -34,6 +70,20 @@ const NewsSection = () => {
 
     return matchesSearch && matchesCategory;
   });
+export default function Blog() {
+  const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All News");
+
+  // Filter by category first
+  const categoryFiltered =
+    activeCategory === "All News"
+      ? newsData
+      : newsData.filter((news) => news.category === activeCategory);
+
+  // Filter by search
+  const filteredNews = categoryFiltered.filter((news) =>
+    news.title.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <section className="bg-white text-gray-900 py-16 px-6 min-h-screen">
@@ -53,6 +103,12 @@ const NewsSection = () => {
 
         {/* Categories */}
         <div className="flex flex-wrap justify-center gap-6 mb-12 border-b pb-4">
+        <h2 className="text-3xl font-bold mb-8 text-left md:text-center">
+          Latest News
+        </h2>
+
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-start md:justify-center gap-6 mb-12 border-b border-gray-100 pb-4">
           {categories.map((cat) => (
             <button
               key={cat}
@@ -60,6 +116,9 @@ const NewsSection = () => {
               className={`text-sm font-semibold ${
                 activeCategory === cat
                   ? "text-blue-500 underline"
+              className={`text-sm font-semibold transition-colors ${
+                activeCategory === cat
+                  ? "text-blue-500 underline underline-offset-8 decoration-2"
                   : "text-gray-500 hover:text-gray-800"
               }`}
             >
@@ -74,6 +133,8 @@ const NewsSection = () => {
             <div key={index} className="group cursor-pointer">
               {/* Image */}
               <div className="overflow-hidden rounded-xl mb-5">
+              {/* Image Container (show first image from images array) */}
+              <div className="relative overflow-hidden rounded-xl mb-5">
                 <img
                   src={news.images[0]}
                   alt={news.title}
@@ -89,6 +150,22 @@ const NewsSection = () => {
               <p className="text-gray-500 text-sm line-clamp-3">{news.desc}</p>
 
               <p className="text-gray-400 text-xs mt-2">{news.date}</p>
+              {/* Text Content */}
+              <div className="space-y-3">
+                <h3 className="text-xl font-bold leading-tight group-hover:text-blue-500 transition-colors">
+                  {news.title}
+                </h3>
+                <p className="text-gray-500 text-sm leading-relaxed line-clamp-3">
+                  {news.desc}
+                </p>
+                <button className="text-blue-500 font-bold text-sm flex items-center gap-1 group/btn">
+                  Read Full News
+                  <span className="transition-transform group-hover/btn:translate-x-1">
+                    →
+                  </span>
+                </button>
+                <p className="text-gray-400 text-xs">{news.date}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -98,3 +175,4 @@ const NewsSection = () => {
 };
 
 export default NewsSection;
+}

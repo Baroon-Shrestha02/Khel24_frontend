@@ -5,6 +5,7 @@ import Footer from "./Components/Layout/Footer";
 import BlogPage from "./Pages/BlogPage";
 import "react-loading-skeleton/dist/skeleton.css";
 import BlogDescription from "./Components/SharedComponents/BlogDescription";
+import ContactPage from "./Pages/ContactPage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/blogs" element={<BlogPage />} />
         <Route path="/blog-description" element={<BlogDescription />} />
+        <Route path="/contact" element={<ContactPage />} />
       </Routes>
       <Footer />
     </>
