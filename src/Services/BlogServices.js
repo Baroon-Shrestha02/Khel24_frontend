@@ -13,6 +13,7 @@ export const fetchSideBlogs = () =>
     params: { status: "published", limit: 3, sort: "-createdAt" },
   });
 
+//pending - blog despription
 export const fetchBlogById = (id) => api.get(`/blogs/${id}`);
 
 export const fetchBlogsByCategory = (category) =>
