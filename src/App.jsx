@@ -6,6 +6,8 @@ import BlogPage from "./Pages/BlogPage";
 import "react-loading-skeleton/dist/skeleton.css";
 import BlogDescription from "./Components/SharedComponents/BlogDescription";
 import ContactPage from "./Pages/ContactPage";
+import StoryModal from "./Components/StoryComponents/StoryModel";
+import AboutPage from "./Pages/AboutPage";
 
 function App() {
   return (
@@ -15,7 +17,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/blogs" element={<BlogPage />} />
         <Route path="/blog-description" element={<BlogDescription />} />
-        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/story" element={<StoryModal />} />
       </Routes>
       <Footer />
     </>

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-// ─── Sub-components ──────────────────────────────────────────────────────────
-
 function CategoryLabel({ name }) {
   return (
     <span className="font-mono text-[10px] font-semibold tracking-[0.15em] uppercase text-gray-400">
@@ -12,13 +10,10 @@ function CategoryLabel({ name }) {
 
 function FeaturedTextCol({ featured }) {
   return (
-    <a
-      href={featured.slug}
-      className="hidden md:flex flex-col justify-between h-full no-underline group"
-    >
+    <a className="hidden md:flex flex-col justify-between h-full no-underline group">
       <div>
         <CategoryLabel name={featured.category} />
-        <h2 className="font-serif text-[clamp(2rem,3vw,2.75rem)] font-bold leading-[1.1] text-gray-900 mt-1.5 mb-0 group-hover:text-gray-500 transition-colors duration-200">
+        <h2 className="font-serif text-[clamp(2rem,3vw,2.75rem)] font-bold leading-[1.1] text-gray-900 mt-1.5 mb-0">
           {featured.title}
         </h2>
       </div>
@@ -44,7 +39,6 @@ function FeaturedImage({ featured }) {
       </div>
 
       <a
-        href={featured.slug}
         className="block overflow-hidden rounded-sm flex-1"
         style={{ minHeight: "420px" }}
       >
@@ -64,7 +58,6 @@ function SideCard({ post }) {
 
   return (
     <a
-      href={post.slug}
       className="block no-underline"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -91,12 +84,6 @@ function SideCard({ post }) {
   );
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
-//
-// Props:
-//   featured  — { category, title, excerpt, image, slug }
-//   sidePosts — [{ id, category, title, excerpt, image, slug }, ...]  (from API)
-//
 export default function CategoryWiseBlog({ featured, sidePosts = [] }) {
   if (!featured) return null;
 
