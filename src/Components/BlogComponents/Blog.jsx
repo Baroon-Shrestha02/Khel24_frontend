@@ -23,7 +23,6 @@ const NewsSection = () => {
 
   const categories = ["All News", "Sports", "Politics", "Technology", "Health"];
 
-  // ✅ Filter logic
   const filteredNews = newsData.filter((news) => {
     const matchesSearch = news.title
       .toLowerCase()

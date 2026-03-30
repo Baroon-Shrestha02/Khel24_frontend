@@ -1,10 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "motion/react";
 import Skeleton from "react-loading-skeleton";
-import {
-  fetchPublishedBlogs,
-  fetchSideBlogs,
-} from "../../Services/BlogServices";
+import { Link } from "react-router-dom";
+import { fetchSideBlogs } from "../../Services/BlogServices";
 
 // category icons
 import { IoFootball } from "react-icons/io5";
@@ -12,7 +10,9 @@ import { MdSportsCricket, MdBusiness, MdInsertDriveFile } from "react-icons/md";
 
 // meta icons
 import { FiCalendar, FiUser, FiArrowRight } from "react-icons/fi";
+import BlogCard from "../SharedComponents/BlogCard";
 
+// ---------------- CATEGORY CONFIG ----------------
 const categoryConfig = {
   Football: {
     icon: <IoFootball className="w-3.5 h-3.5" />,
@@ -36,9 +36,18 @@ const categoryConfig = {
   },
 };
 
-const getCategoryConfig = (category) =>
-  categoryConfig[category] || categoryConfig.other;
+// normalize category safely
+const getCategoryConfig = (category) => {
+  const key = category?.toLowerCase();
 
+  if (key === "football") return categoryConfig.Football;
+  if (key === "cricket") return categoryConfig.Cricket;
+  if (key === "org") return categoryConfig.org;
+
+  return categoryConfig.other;
+};
+
+// ---------------- NEWS CARD ----------------
 function NewsCard({
   title,
   summary,
@@ -52,10 +61,12 @@ function NewsCard({
   const isInView = useInView(ref, { once: true, margin: "0px 0px -60px 0px" });
   const config = getCategoryConfig(category);
 
-  const formattedDate = new Date(createdAt).toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "long",
-  });
+  const formattedDate = createdAt
+    ? new Date(createdAt).toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "long",
+      })
+    : "Unknown";
 
   return (
     <motion.div
@@ -68,17 +79,18 @@ function NewsCard({
         ease: [0.22, 1, 0.36, 1],
       }}
     >
-      <a
-        href={url || "#"}
+      <Link
+        to={url || "#"}
         className="group block bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
       >
         {/* Image */}
         <div className="relative overflow-hidden h-52">
           <img
-            src={heroImage?.url}
+            src={heroImage?.url || "/fallback.jpg"}
             alt={title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
+
           {category && (
             <span
               className={`absolute top-3 left-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${config.bg} ${config.text}`}
@@ -94,11 +106,12 @@ function NewsCard({
           <h2 className="text-[1.05rem] font-extrabold text-gray-900 leading-snug group-hover:text-[#00569e] transition-colors duration-200 line-clamp-2">
             {title}
           </h2>
+
           <p className="text-gray-500 text-sm leading-relaxed line-clamp-3">
             {summary}
           </p>
 
-          {/* Footer meta */}
+          {/* Footer */}
           <div className="flex items-center justify-between mt-1 pt-3 border-t border-gray-100">
             <div className="flex items-center gap-1.5 text-xs text-gray-400">
               <FiCalendar className="w-3.5 h-3.5" />
@@ -116,15 +129,16 @@ function NewsCard({
             </span>
           </div>
         </div>
-      </a>
+      </Link>
     </motion.div>
   );
 }
 
+// ---------------- SKELETON ----------------
 function SkeletonCard() {
   return (
     <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-      <Skeleton height={208} borderRadius={0} />
+      <Skeleton height={208} />
       <div className="p-5 flex flex-col gap-3">
         <Skeleton height={18} width="75%" />
         <Skeleton height={14} count={3} />
@@ -138,6 +152,7 @@ function SkeletonCard() {
   );
 }
 
+// ---------------- MAIN COMPONENT ----------------
 export default function LatestBlog() {
   const headingRef = useRef(null);
   const headingInView = useInView(headingRef, { once: true });
@@ -149,62 +164,71 @@ export default function LatestBlog() {
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const { data } = await fetchSideBlogs();
-        setBlogs(data.data);
+        setLoading(true);
+        const res = await fetchSideBlogs();
+        setBlogs(res?.data?.data || []);
       } catch (err) {
-        setError(err.response?.data?.message || err.message);
+        setError(err?.response?.data?.message || err.message);
       } finally {
         setLoading(false);
       }
     };
+
     fetchBlogs();
   }, []);
 
+  //   console.log(blogs[0].heroImage.url);
   return (
     <section id="news" className="container mx-auto px-4 py-10">
+      {/* Heading */}
       <motion.div
         ref={headingRef}
         initial={{ opacity: 0, y: 20 }}
         animate={headingInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        transition={{ duration: 0.5 }}
         className="flex items-center gap-4 mb-8"
       >
         <div className="w-1 h-8 bg-[#00569e] rounded-full" />
-        <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">
-          Latest News
-        </h2>
+        <h2 className="text-3xl font-extrabold text-gray-900">Latest News</h2>
       </motion.div>
 
+      {/* Error */}
       {error && (
         <div className="text-center py-10 text-red-500 text-sm">
           Failed to load blogs: {error}
         </div>
       )}
 
+      {/* Empty */}
       {!loading && !error && blogs.length === 0 && (
         <div className="text-center py-10 text-gray-400 text-sm">
           No blogs published yet.
         </div>
       )}
 
+      {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Skeleton */}
         {loading &&
           Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)}
 
+        {/* Blogs */}
         {!loading &&
           !error &&
-          blogs.map((blog, index) => (
-            <NewsCard
-              key={blog._id}
-              index={index}
-              title={blog.title}
-              summary={blog.summary}
-              heroImage={blog.heroImage}
-              category={blog.category}
-              createdAt={blog.createdAt}
-              url={`/blogs/${blog._id}`}
-            />
-          ))}
+          blogs
+            .slice(0, 3)
+            .map((blog, index) => (
+              <BlogCard
+                key={blog._id}
+                index={index}
+                title={blog.title}
+                summary={blog.summary}
+                heroImage={blog.heroImage?.url}
+                category={blog.category}
+                createdAt={blog.createdAt}
+                url={`/blogs/${blog._id}`}
+              />
+            ))}
       </div>
     </section>
   );

@@ -25,7 +25,7 @@ export default function CricketBlogs() {
   }, []);
 
   return (
-    <div className="bg-[#01569e] rounded-3xl">
+    <div className=" rounded-3xl">
       <CategoryWiseBlog
         featured={{
           category: "Cricket",

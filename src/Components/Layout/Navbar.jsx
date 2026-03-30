@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import TimeDisplay from "../../Utils/TimeDisplay";
 import { FaSun, FaMoon } from "react-icons/fa"; // Icons for theme buttons
+import StoryModal from "../StoryComponents/StoryModel";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -13,8 +14,8 @@ export default function Navbar() {
 
   const navLinks = [
     { label: "Home", to: "/" },
-    { label: "Blogs", to: "/Blogs" },
-    { label: "About Us", to: "/technology" },
+    { label: "Blogs", to: "/blogs" },
+    { label: "About Us", to: "/about" },
     { label: "Contact Us", to: "/contact" },
   ];
 
@@ -112,6 +113,11 @@ export default function Navbar() {
         <div className="flex items-center justify-between container mx-auto py-1">
           <div className="h-8 w-8 bg-red-500"> for stor</div>
 
+      {/* ── Bottom Row: Nav + Search ── */}
+      <div className="bg-[#00569e]">
+        <div className="flex items-center justify-between container mx-auto">
+          {/* <div className="h-8 w-8 bg-red-500"> for stor</div> */}
+          <StoryModal />
           {/* Nav Links — desktop */}
           <ul className="hidden md:flex items-center">
             {navLinks.map((link) => (
