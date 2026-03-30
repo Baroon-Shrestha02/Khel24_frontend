@@ -1,12 +1,14 @@
 // src/Components/Layout/Navbar.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import TimeDisplay from "../../Utils/TimeDisplay";
+import { FaSun, FaMoon } from "react-icons/fa"; // Icons for theme buttons
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchFocused, setSearchFocused] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
   const location = useLocation();
 
   const navLinks = [
@@ -18,10 +20,24 @@ export default function Navbar() {
 
   const isActive = (to) => location.pathname === to;
 
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark");
+      document.body.classList.remove("light");
+    } else {
+      document.body.classList.add("light");
+      document.body.classList.remove("dark");
+    }
+  }, [darkMode]);
+
   return (
-    <header className="w-full shadow-lg">
-      {/* ── Top Row: Logo + Time ── */}
-      <div className="flex items-center justify-between px-8 border-b border-gray-100 bg-white container mx-auto">
+    <header className={`w-full shadow-lg ${darkMode ? "bg-gray-900" : "bg-white"}`}>
+      {/* Top Row: Logo + Time + Theme Buttons */}
+      <div
+        className={`flex items-center justify-between px-8 border-b ${
+          darkMode ? "border-gray-700" : "border-gray-100"
+        } container mx-auto`}
+      >
         <Link to="/" className="flex items-center">
           <img
             src="main/logo.png"
@@ -30,32 +46,72 @@ export default function Navbar() {
           />
         </Link>
 
-        <div className="flex items-center gap-3 bg-blue-50 border border-blue-100 rounded-full px-5 py-2 shadow-sm">
-          {/* Clock icon */}
-          <svg
-            className="w-4 h-4 text-[#00569e]"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+        <div className="flex items-center gap-3">
+          {/* Clock */}
+          <div
+            className={`flex items-center gap-3 px-5 py-2 rounded-full shadow-sm ${
+              darkMode ? "bg-gray-800 border-gray-700" : "bg-blue-50 border-blue-100"
+            } border`}
           >
-            <circle cx="12" cy="12" r="10" strokeWidth="2" />
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 6v6l4 2"
-            />
-          </svg>
-          <span className="text-sm font-semibold text-[#00569e] tracking-wide">
-            <TimeDisplay />
-          </span>
+            <svg
+              className={`w-4 h-4 ${darkMode ? "text-white" : "text-[#00569e]"}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="12" cy="12" r="10" strokeWidth="2" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 6v6l4 2"
+              />
+            </svg>
+            <span
+              className={`text-sm font-semibold tracking-wide ${
+                darkMode ? "text-white" : "text-[#00569e]"
+              }`}
+            >
+              <TimeDisplay />
+            </span>
+          </div>
+
+          {/* Theme Buttons — only show on Home page */}
+          {location.pathname === "/" && (
+            <div className="flex gap-2 ml-4">
+              <button
+                onClick={() => setDarkMode(false)}
+                className={`p-2 rounded-full shadow-sm transition-colors ${
+                  !darkMode
+                    ? "bg-yellow-400 text-white"
+                    : "bg-gray-300 text-gray-800 hover:bg-yellow-400 hover:text-white"
+                }`}
+                title="Light Mode"
+              >
+                <FaSun size={18} />
+              </button>
+
+              <button
+                onClick={() => setDarkMode(true)}
+                className={`p-2 rounded-full shadow-sm transition-colors ${
+                  darkMode
+                    ? "bg-blue-800 text-white"
+                    : "bg-gray-300 text-gray-800 hover:bg-blue-800 hover:text-white"
+                }`}
+                title="Dark Mode"
+              >
+                <FaMoon size={18} />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* ── Bottom Row: Nav + Search ── */}
-      <div className="bg-[#00569e]">
-        <div className="flex items-center justify-between container mx-auto">
+      {/* Bottom Row: Nav + Search */}
+      <div className={`${darkMode ? "bg-gray-800" : "bg-[#00569e]"}`}>
+        <div className="flex items-center justify-between container mx-auto py-1">
           <div className="h-8 w-8 bg-red-500"> for stor</div>
+
           {/* Nav Links — desktop */}
           <ul className="hidden md:flex items-center">
             {navLinks.map((link) => (
@@ -65,17 +121,23 @@ export default function Navbar() {
                   className={`
                     relative inline-block text-sm font-semibold uppercase tracking-widest
                     px-5 py-5 transition-all duration-200
-                    ${
-                      isActive(link.to)
-                        ? "bg-white text-[#00569e]"
-                        : "text-white hover:bg-white/15 hover:text-white"
+                    ${isActive(link.to)
+                      ? darkMode
+                        ? "bg-gray-700 text-white"
+                        : "bg-white text-[#00569e]"
+                      : darkMode
+                      ? "text-gray-300 hover:bg-gray-700 hover:text-white"
+                      : "text-white hover:bg-white/15 hover:text-white"
                     }
                   `}
                 >
                   {link.label}
-                  {/* Active bottom indicator */}
                   {isActive(link.to) && (
-                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#0569e]" />
+                    <span
+                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full ${
+                        darkMode ? "bg-white" : "bg-[#0569e]"
+                      }`}
+                    />
                   )}
                 </Link>
               </li>
@@ -84,15 +146,15 @@ export default function Navbar() {
 
           {/* Search Bar — desktop */}
           <div
-            className={`
-              hidden md:flex items-center bg-white rounded-lg px-4 py-2 gap-2 my-3 mr-2
-              transition-all duration-200 shadow-sm
-              ${searchFocused ? "ring-2 ring-white/60 shadow-md" : ""}
-            `}
+            className={`hidden md:flex items-center rounded-lg px-4 py-2 gap-2 my-3 mr-2 transition-all duration-200 shadow-sm ${
+              darkMode
+                ? "bg-gray-700 text-white ring-1 ring-gray-600"
+                : "bg-white"
+            } ${searchFocused ? "ring-2 ring-white/60 shadow-md" : ""}`}
             style={{ minWidth: "220px" }}
           >
             <svg
-              className="w-4 h-4 text-[#00569e] shrink-0"
+              className={`w-4 h-4 shrink-0 ${darkMode ? "text-white" : "text-[#00569e]"}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -111,7 +173,9 @@ export default function Navbar() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}
-              className="bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none w-40"
+              className={`bg-transparent text-sm placeholder-gray-400 outline-none w-40 ${
+                darkMode ? "text-white" : "text-gray-800"
+              }`}
             />
             {searchQuery && (
               <button
@@ -174,13 +238,17 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ── Mobile Dropdown Menu ── */}
+      {/* Mobile Dropdown Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-[#00569e] border-t border-blue-700 px-6 pb-4">
+        <div className={`${darkMode ? "bg-gray-800" : "bg-[#00569e]"} md:hidden border-t px-6 pb-4`}>
           {/* Mobile Search */}
-          <div className="flex items-center bg-white rounded-lg px-4 py-2.5 gap-2 mt-3 mb-3 shadow-sm">
+          <div
+            className={`flex items-center rounded-lg px-4 py-2.5 gap-2 mt-3 mb-3 shadow-sm ${
+              darkMode ? "bg-gray-700 text-white" : "bg-white"
+            }`}
+          >
             <svg
-              className="w-4 h-4 text-[#00569e] shrink-0"
+              className={`w-4 h-4 shrink-0 ${darkMode ? "text-white" : "text-[#00569e]"}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -197,7 +265,9 @@ export default function Navbar() {
               placeholder="Search news..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-transparent text-sm text-gray-800 placeholder-gray-400 outline-none w-full"
+              className={`bg-transparent text-sm placeholder-gray-400 outline-none w-full ${
+                darkMode ? "text-white" : "text-gray-800"
+              }`}
             />
           </div>
 
@@ -208,15 +278,15 @@ export default function Navbar() {
                 <Link
                   to={link.to}
                   onClick={() => setMenuOpen(false)}
-                  className={`
-                    block text-sm font-semibold uppercase tracking-widest py-2.5 px-3 rounded-md
-                    transition-colors duration-200
-                    ${
-                      isActive(link.to)
-                        ? "bg-white text-[#00569e]"
-                        : "text-white hover:bg-white/15"
-                    }
-                  `}
+                  className={`block text-sm font-semibold uppercase tracking-widest py-2.5 px-3 rounded-md transition-colors duration-200 ${
+                    isActive(link.to)
+                      ? darkMode
+                        ? "bg-gray-700 text-white"
+                        : "bg-white text-[#00569e]"
+                      : darkMode
+                      ? "text-gray-300 hover:bg-gray-700 hover:text-white"
+                      : "text-white hover:bg-white/15"
+                  }`}
                 >
                   {link.label}
                 </Link>
