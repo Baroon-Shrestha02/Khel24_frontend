@@ -8,6 +8,12 @@ import BlogDescription from "./Components/SharedComponents/BlogDescription";
 import ContactPage from "./Pages/ContactPage";
 import StoryModal from "./Components/StoryComponents/StoryModel";
 import AboutPage from "./Pages/AboutPage";
+import FootballBlogPage from "./Pages/BlogPages/FootballBlogPage";
+import CricketBlogPage from "./Pages/BlogPages/CricketBlogPage";
+import VolleyballBlogPage from "./Pages/BlogPages/VolleyballBlogPage";
+import OthersBlogsPage from "./Pages/BlogPages/OthersBlogsPage";
+import Register from "./Components/AuthComponent/Register";
+import Login from "./Components/AuthComponent/Login";
 
 function App() {
   return (
@@ -19,6 +25,13 @@ function App() {
         <Route path="/blog-description" element={<BlogDescription />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/story" element={<StoryModal />} />
+        <Route path="/football" element={<FootballBlogPage />} />
+        <Route path="/cricket" element={<CricketBlogPage />} />
+        <Route path="/volleyball" element={<VolleyballBlogPage />} />
+        <Route path="/others" element={<OthersBlogsPage />} />
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
       <Footer />
     </>

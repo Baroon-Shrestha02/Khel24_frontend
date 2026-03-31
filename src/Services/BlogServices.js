@@ -25,8 +25,10 @@ export const fetchFootballBlogs = () =>
 export const fetchCricketBlogs = () =>
   api.get("/blogs", { params: { status: "published", category: "Cricket" } });
 
-export const fetchOrgBlogs = () =>
-  api.get("/blogs", { params: { status: "published", category: "O" } });
+export const fetchVolleyballBlogs = () =>
+  api.get("/blogs", {
+    params: { status: "published", category: "Volleyball" },
+  });
 
 export const fetchOthersBlogs = () =>
-  api.get("/blogs", { params: { status: "published", category: "Cricket" } });
+  api.get("/blogs", { params: { status: "published", category: "Others" } });
