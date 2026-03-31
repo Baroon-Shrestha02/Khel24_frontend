@@ -1,306 +1,401 @@
 // src/Components/Layout/Navbar.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import TimeDisplay from "../../Utils/TimeDisplay";
-import { FaSun, FaMoon } from "react-icons/fa"; // Icons for theme buttons
+import { FaSun, FaMoon } from "react-icons/fa";
+import { Search, User, X } from "lucide-react";
 import StoryModal from "../StoryComponents/StoryModel";
+
+const sportsLinks = [
+  { label: "फुटबल", to: "/football" },
+  { label: "क्रिकेट", to: "/cricket" },
+  { label: "भलिबल", to: "/volleyball" },
+  { label: "अन्य", to: "/others" },
+];
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchFocused, setSearchFocused] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const searchRef = useRef(null);
+  const profileRef = useRef(null);
   const location = useLocation();
 
   const navLinks = [
     { label: "Home", to: "/" },
     { label: "Blogs", to: "/blogs" },
-    { label: "About Us", to: "/about" },
-    { label: "Contact Us", to: "/contact" },
+    ...sportsLinks,
   ];
 
   const isActive = (to) => location.pathname === to;
 
   useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add("dark");
-      document.body.classList.remove("light");
-    } else {
-      document.body.classList.add("light");
-      document.body.classList.remove("dark");
-    }
+    document.body.classList.toggle("dark", darkMode);
+    document.body.classList.toggle("light", !darkMode);
   }, [darkMode]);
 
+  useEffect(() => {
+    setMenuOpen(false);
+    setSearchOpen(false);
+    setProfileOpen(false);
+  }, [location.pathname]);
+
+  // Close dropdowns on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (profileRef.current && !profileRef.current.contains(e.target))
+        setProfileOpen(false);
+      if (searchRef.current && !searchRef.current.contains(e.target))
+        setSearchOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  // Focus input when search opens
+  useEffect(() => {
+    if (searchOpen) {
+      setTimeout(() => {
+        searchRef.current?.querySelector("input")?.focus();
+      }, 100);
+    }
+  }, [searchOpen]);
+
   return (
-    <header className={`w-full shadow-lg ${darkMode ? "bg-gray-900" : "bg-white"}`}>
-      {/* Top Row: Logo + Time + Theme Buttons */}
+    <header
+      className={`w-full shadow-lg ${darkMode ? "bg-gray-900" : "bg-white"}`}
+    >
+      {/* ── Top Row ── */}
       <div
-        className={`flex items-center justify-between px-8 border-b ${
+        className={`flex items-center justify-between px-6 border-b ${
           darkMode ? "border-gray-700" : "border-gray-100"
         } container mx-auto`}
       >
-        <Link to="/" className="flex items-center">
+        {/* Logo */}
+        <Link to="/" className="flex items-center shrink-0">
           <img
             src="main/logo.png"
             alt="KhelLive24"
-            className="h-24 mix-blend-multiply"
+            className="h-20 mix-blend-multiply"
           />
         </Link>
 
-        <div className="flex items-center gap-3">
+        {/* Right side: Clock + Icons */}
+        <div className="flex items-center gap-2">
           {/* Clock */}
-          <div
-            className={`flex items-center gap-3 px-5 py-2 rounded-full shadow-sm ${
-              darkMode ? "bg-gray-800 border-gray-700" : "bg-blue-50 border-blue-100"
-            } border`}
-          >
-            <svg
-              className={`w-4 h-4 ${darkMode ? "text-white" : "text-[#00569e]"}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <circle cx="12" cy="12" r="10" strokeWidth="2" />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 6v6l4 2"
-              />
-            </svg>
+          <div className={`flex items-center gap-2 px-4 py-2 rounded-full`}>
             <span
-              className={`text-sm font-semibold tracking-wide ${
-                darkMode ? "text-white" : "text-[#00569e]"
-              }`}
+              className={`text-sm font-semibold tracking-wide ${darkMode ? "text-white" : "text-[#00569e]"}`}
             >
               <TimeDisplay />
             </span>
           </div>
 
-          {/* Theme Buttons — only show on Home page */}
-          {location.pathname === "/" && (
-            <div className="flex gap-2 ml-4">
-              <button
-                onClick={() => setDarkMode(false)}
-                className={`p-2 rounded-full shadow-sm transition-colors ${
-                  !darkMode
-                    ? "bg-yellow-400 text-white"
-                    : "bg-gray-300 text-gray-800 hover:bg-yellow-400 hover:text-white"
-                }`}
-                title="Light Mode"
-              >
-                <FaSun size={18} />
-              </button>
+          {/* Divider */}
+          <div
+            className={`w-px h-6 mx-1 ${darkMode ? "bg-gray-700" : "bg-gray-200"}`}
+          />
 
-              <button
-                onClick={() => setDarkMode(true)}
-                className={`p-2 rounded-full shadow-sm transition-colors ${
-                  darkMode
-                    ? "bg-blue-800 text-white"
-                    : "bg-gray-300 text-gray-800 hover:bg-blue-800 hover:text-white"
-                }`}
-                title="Dark Mode"
+          {/* Search Icon + Expandable */}
+          <div className="relative" ref={searchRef}>
+            <button
+              onClick={() => setSearchOpen((p) => !p)}
+              className={`p-2 rounded-full transition-colors duration-150 ${
+                searchOpen
+                  ? darkMode
+                    ? "bg-gray-700 text-white"
+                    : "bg-[#00569e] text-white"
+                  : darkMode
+                    ? "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-[#00569e]"
+              }`}
+              title="Search"
+            >
+              <Search size={18} />
+            </button>
+
+            {/* Expanding search box */}
+            {searchOpen && (
+              <div
+                className={`absolute right-0 top-full mt-2 z-50 flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-lg border
+                  ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}
+                `}
+                style={{ width: "280px" }}
               >
-                <FaMoon size={18} />
-              </button>
-            </div>
-          )}
+                <Search
+                  size={15}
+                  className={darkMode ? "text-gray-400" : "text-gray-400"}
+                />
+                <input
+                  type="text"
+                  placeholder="Search news..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className={`bg-transparent text-sm outline-none flex-1 placeholder-gray-400 ${
+                    darkMode ? "text-white" : "text-gray-800"
+                  }`}
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Theme Toggle */}
+          <button
+            onClick={() => setDarkMode((p) => !p)}
+            className={`p-2 rounded-full transition-colors duration-150 ${
+              darkMode
+                ? "bg-gray-700 text-yellow-400 hover:bg-gray-600"
+                : "text-gray-600 hover:bg-gray-100 hover:text-[#00569e]"
+            }`}
+            title={darkMode ? "Light Mode" : "Dark Mode"}
+          >
+            {darkMode ? <FaSun size={17} /> : <FaMoon size={17} />}
+          </button>
+
+          {/* Profile Icon */}
+          <div className="relative" ref={profileRef}>
+            <button
+              onClick={() => setProfileOpen((p) => !p)}
+              className={`p-2 rounded-full transition-colors duration-150 ${
+                profileOpen
+                  ? darkMode
+                    ? "bg-gray-700 text-white"
+                    : "bg-[#00569e] text-white"
+                  : darkMode
+                    ? "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-[#00569e]"
+              }`}
+              title="Profile"
+            >
+              <User size={18} />
+            </button>
+
+            {/* Profile Dropdown */}
+            {profileOpen && (
+              <div
+                className={`absolute right-0 top-full mt-2 z-50 rounded-xl shadow-lg border overflow-hidden
+                  ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"}
+                `}
+                style={{ minWidth: "180px" }}
+              >
+                <div
+                  className={`px-4 py-3 border-b ${darkMode ? "border-gray-700" : "border-gray-100"}`}
+                >
+                  <p
+                    className={`text-sm font-semibold ${darkMode ? "text-white" : "text-gray-800"}`}
+                  >
+                    मेरो खाता
+                  </p>
+                  <p
+                    className={`text-xs mt-0.5 ${darkMode ? "text-gray-400" : "text-gray-400"}`}
+                  >
+                    user@email.com
+                  </p>
+                </div>
+                {[
+                  { label: "प्रोफाइल", to: "/profile" },
+                  { label: "सेटिङ्स", to: "/settings" },
+                ].map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setProfileOpen(false)}
+                    className={`block px-4 py-2.5 text-sm transition-colors duration-150 ${
+                      darkMode
+                        ? "text-gray-300 hover:bg-gray-700 hover:text-white"
+                        : "text-gray-700 hover:bg-gray-50 hover:text-[#00569e]"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+                <div
+                  className={`border-t ${darkMode ? "border-gray-700" : "border-gray-100"}`}
+                >
+                  <button
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors duration-150 ${
+                      darkMode
+                        ? "text-red-400 hover:bg-gray-700"
+                        : "text-red-500 hover:bg-red-50"
+                    }`}
+                  >
+                    लग आउट
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Bottom Row: Nav + Search */}
-      <div className={`${darkMode ? "bg-gray-800" : "bg-[#00569e]"}`}>
-        <div className="flex items-center justify-between container mx-auto py-1">
-          <div className="h-8 w-8 bg-red-500"> for stor</div>
+      {/* ── Bottom Nav Row ── */}
+      <div className={darkMode ? "bg-gray-800" : "bg-[#00569e]"}>
+        <div className="container mx-auto flex items-center">
+          {/* StoryModal */}
+          <div className="shrink-0">
+            <StoryModal />
+          </div>
 
-      {/* ── Bottom Row: Nav + Search ── */}
-      <div className="bg-[#00569e]">
-        <div className="flex items-center justify-between container mx-auto">
-          {/* <div className="h-8 w-8 bg-red-500"> for stor</div> */}
-          <StoryModal />
-          {/* Nav Links — desktop */}
-          <ul className="hidden md:flex items-center">
+          {/* Desktop Nav — all links inline */}
+          <ul className="hidden md:flex items-center flex-1 flex-wrap">
             {navLinks.map((link) => (
               <li key={link.to}>
                 <Link
                   to={link.to}
                   className={`
-                    relative inline-block text-sm font-semibold uppercase tracking-widest
-                    px-5 py-5 transition-all duration-200
-                    ${isActive(link.to)
-                      ? darkMode
-                        ? "bg-gray-700 text-white"
-                        : "bg-white text-[#00569e]"
-                      : darkMode
-                      ? "text-gray-300 hover:bg-gray-700 hover:text-white"
-                      : "text-white hover:bg-white/15 hover:text-white"
+                    inline-block text-sm font-semibold uppercase tracking-widest
+                    px-5 py-5 transition-all duration-200 whitespace-nowrap
+                    ${
+                      isActive(link.to)
+                        ? darkMode
+                          ? "bg-gray-700 text-white"
+                          : "bg-white text-[#00569e]"
+                        : darkMode
+                          ? "text-gray-300 hover:bg-gray-700 hover:text-white"
+                          : "text-white hover:bg-white/15 hover:text-white"
                     }
                   `}
                 >
                   {link.label}
-                  {isActive(link.to) && (
-                    <span
-                      className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full ${
-                        darkMode ? "bg-white" : "bg-[#0569e]"
-                      }`}
-                    />
-                  )}
                 </Link>
               </li>
             ))}
           </ul>
 
-          {/* Search Bar — desktop */}
-          <div
-            className={`hidden md:flex items-center rounded-lg px-4 py-2 gap-2 my-3 mr-2 transition-all duration-200 shadow-sm ${
-              darkMode
-                ? "bg-gray-700 text-white ring-1 ring-gray-600"
-                : "bg-white"
-            } ${searchFocused ? "ring-2 ring-white/60 shadow-md" : ""}`}
-            style={{ minWidth: "220px" }}
-          >
-            <svg
-              className={`w-4 h-4 shrink-0 ${darkMode ? "text-white" : "text-[#00569e]"}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"
-              />
-            </svg>
-            <input
-              type="text"
-              placeholder="Search news..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => setSearchFocused(true)}
-              onBlur={() => setSearchFocused(false)}
-              className={`bg-transparent text-sm placeholder-gray-400 outline-none w-40 ${
-                darkMode ? "text-white" : "text-gray-800"
-              }`}
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                <svg
-                  className="w-3.5 h-3.5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-            )}
-          </div>
-
-          {/* Hamburger — mobile only */}
+          {/* Hamburger — mobile */}
           <button
             onClick={() => setMenuOpen((prev) => !prev)}
-            className="md:hidden ml-auto text-white focus:outline-none p-1"
+            className="md:hidden ml-auto text-white focus:outline-none p-2 mr-2"
             aria-label="Toggle menu"
           >
-            {menuOpen ? (
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            )}
+            <div className="flex flex-col justify-center items-center w-6 h-6 gap-[5px]">
+              <span
+                className={`block h-0.5 bg-white rounded-full transition-all duration-300 origin-center ${
+                  menuOpen ? "w-6 rotate-45 translate-y-[7px]" : "w-6"
+                }`}
+              />
+              <span
+                className={`block h-0.5 bg-white rounded-full transition-all duration-300 ${
+                  menuOpen ? "w-0 opacity-0" : "w-5"
+                }`}
+              />
+              <span
+                className={`block h-0.5 bg-white rounded-full transition-all duration-300 origin-center ${
+                  menuOpen ? "w-6 -rotate-45 -translate-y-[7px]" : "w-4"
+                }`}
+              />
+            </div>
           </button>
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu */}
-      {menuOpen && (
-        <div className={`${darkMode ? "bg-gray-800" : "bg-[#00569e]"} md:hidden border-t px-6 pb-4`}>
+      {/* ── Mobile Menu ── */}
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          menuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
+        } ${darkMode ? "bg-gray-900" : "bg-[#003d75]"}`}
+      >
+        <div className="px-5 pb-6 pt-3 flex flex-col gap-1">
           {/* Mobile Search */}
           <div
-            className={`flex items-center rounded-lg px-4 py-2.5 gap-2 mt-3 mb-3 shadow-sm ${
-              darkMode ? "bg-gray-700 text-white" : "bg-white"
+            className={`flex items-center rounded-xl px-4 py-3 gap-2 mb-3 ${
+              darkMode ? "bg-gray-800" : "bg-[#00469e]"
             }`}
           >
-            <svg
-              className={`w-4 h-4 shrink-0 ${darkMode ? "text-white" : "text-[#00569e]"}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"
-              />
-            </svg>
+            <Search size={15} className="text-white/50 shrink-0" />
             <input
               type="text"
               placeholder="Search news..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className={`bg-transparent text-sm placeholder-gray-400 outline-none w-full ${
-                darkMode ? "text-white" : "text-gray-800"
-              }`}
+              className="bg-transparent text-sm placeholder-white/40 outline-none w-full text-white"
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="text-white/50 hover:text-white"
+              >
+                <X size={14} />
+              </button>
+            )}
           </div>
 
-          {/* Mobile Nav Links */}
-          <ul className="flex flex-col space-y-1">
-            {navLinks.map((link) => (
-              <li key={link.to}>
-                <Link
-                  to={link.to}
-                  onClick={() => setMenuOpen(false)}
-                  className={`block text-sm font-semibold uppercase tracking-widest py-2.5 px-3 rounded-md transition-colors duration-200 ${
+          {/* Divider label */}
+          <p
+            className={`text-xs font-bold uppercase tracking-widest px-1 mb-1 ${
+              darkMode ? "text-gray-500" : "text-white/40"
+            }`}
+          >
+            Navigation
+          </p>
+
+          {/* Home + Blogs */}
+          {[
+            { label: "Home", to: "/" },
+            { label: "Blogs", to: "/blogs" },
+          ].map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              onClick={() => setMenuOpen(false)}
+              className={`
+                flex items-center text-sm font-semibold uppercase tracking-widest py-3 px-4 rounded-xl
+                transition-colors duration-200
+                ${
+                  isActive(link.to)
+                    ? "bg-white text-[#00569e]"
+                    : "text-white/90 hover:bg-white/10 hover:text-white"
+                }
+              `}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          {/* Sports divider label */}
+          <p
+            className={`text-xs font-bold uppercase tracking-widest px-1 mt-3 mb-1 ${
+              darkMode ? "text-gray-500" : "text-white/40"
+            }`}
+          >
+            खेलकुद
+          </p>
+
+          {/* Sports links grid */}
+          <div className="grid grid-cols-2 gap-2">
+            {sportsLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                onClick={() => setMenuOpen(false)}
+                className={`
+                  flex items-center justify-center text-sm font-semibold py-3 px-4 rounded-xl
+                  transition-colors duration-200
+                  ${
                     isActive(link.to)
-                      ? darkMode
-                        ? "bg-gray-700 text-white"
-                        : "bg-white text-[#00569e]"
+                      ? "bg-white text-[#00569e]"
                       : darkMode
-                      ? "text-gray-300 hover:bg-gray-700 hover:text-white"
-                      : "text-white hover:bg-white/15"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              </li>
+                        ? "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
+                        : "bg-white/10 text-white/90 hover:bg-white/20 hover:text-white"
+                  }
+                `}
+              >
+                {link.label}
+              </Link>
             ))}
-          </ul>
+          </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }

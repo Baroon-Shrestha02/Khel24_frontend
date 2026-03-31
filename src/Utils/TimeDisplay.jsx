@@ -1,29 +1,50 @@
 import { useEffect, useState } from "react";
 
+const nepaliDays = [
+  "आइतबार",
+  "सोमबार",
+  "मंगलबार",
+  "बुधबार",
+  "बिहिबार",
+  "शुक्रबार",
+  "शनिबार",
+];
+
+const toNepaliNumber = (num) =>
+  num.toString().replace(/\d/g, (d) => "०१२३४५६७८९"[d]);
+
 export default function TimeDisplay() {
   const [time, setTime] = useState(new Date());
 
   useEffect(() => {
     const interval = setInterval(() => {
       setTime(new Date());
-    }, 1000); // update every second
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
-  // Local time (HH:MM:SS)
-  const localTime = time.toLocaleTimeString();
+  const kathmanduTime = new Date(
+    time.toLocaleString("en-US", { timeZone: "Asia/Kathmandu" }),
+  );
 
-  // Nepal Time (GMT+5:45)
-  const nepalTime = time.toLocaleTimeString("en-US", {
-    timeZone: "Asia/Kathmandu",
-    hour12: false,
-  });
+  const day = nepaliDays[kathmanduTime.getDay()];
+
+  const hh = toNepaliNumber(
+    kathmanduTime.getHours().toString().padStart(2, "0"),
+  );
+  const mm = toNepaliNumber(
+    kathmanduTime.getMinutes().toString().padStart(2, "0"),
+  );
+  const ss = toNepaliNumber(
+    kathmanduTime.getSeconds().toString().padStart(2, "0"),
+  );
 
   return (
     <div>
-      {/* <h2>Local Time: {localTime}</h2> */}
-      <h2>Nepal Time (GMT+5:45): {nepalTime}</h2>
+      <h2>
+        {day}, {hh}:{mm}:{ss}
+      </h2>
     </div>
   );
 }

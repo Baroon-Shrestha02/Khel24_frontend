@@ -1,12 +1,14 @@
 import React from "react";
-import BlogHero from "./BlogHero";
+
 import AllBlogs from "./AllBlogs";
+import FootballPage from "./SharedComponents/FootballPage";
 
 export default function Index() {
   return (
     <div>
-      <BlogHero />
+      {/* <BlogHero /> */}
       <AllBlogs />
+      <FootballPage />
     </div>
   );
 }

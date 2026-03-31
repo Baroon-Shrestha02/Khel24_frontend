@@ -1,5 +1,5 @@
 import React from "react";
-import Index from "../Components/AboutComponents/Index";
+import Index from "../Components/BlogsOnly/Index";
 
 export default function AboutPage() {
   return (

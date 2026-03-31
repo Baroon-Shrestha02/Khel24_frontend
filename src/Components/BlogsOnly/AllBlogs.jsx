@@ -1,10 +1,11 @@
 import React from "react";
-import BlogsView from "./SharedComponents/BlogsView";
+
+import CategoryBlogsView from "./SharedComponents/CategoryBlogsView";
 
 export default function AllBlogs() {
   return (
     <div>
-      <BlogsView />
+      <CategoryBlogsView />
     </div>
   );
 }
