@@ -1,17 +1,15 @@
 import React from "react";
-import FeaturedBlog from "./FeaturedBlog";
-import LatestBlog from "./LatestBlog";
-import Blog from "./Blog";
-import CategoryWiseBlog from "../HomeComponents/BlogCateogories/CategoryWiseBlog";
-import CategoryBlogs from "./CategoryBlogs";
+import BlogMain from "./BlogMain";
 
 export default function Index() {
   return (
     <>
-      <FeaturedBlog />
+      {/* <FeaturedBlog />
       <LatestBlog />
       <CategoryBlogs />
-      <Blog />
+      <Blog /> */}
+
+      <BlogMain />
     </>
   );
 }

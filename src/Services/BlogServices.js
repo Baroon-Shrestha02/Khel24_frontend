@@ -3,6 +3,11 @@ import api from "./AxiosInstance";
 export const fetchPublishedBlogs = () =>
   api.get("/blogs", { params: { status: "published" } });
 
+export const fetchRecentPublishedBlogs = (limit = 12) =>
+  api.get("/blogs", {
+    params: { status: "published", limit, sort: "-createdAt" },
+  });
+
 export const fetchFeaturedBlog = () =>
   api.get("/featured", {
     params: { status: "published", limit: 1, sort: "-createdAt" },
@@ -13,6 +18,10 @@ export const fetchSideBlogs = () =>
     params: { status: "published", limit: 3, sort: "-createdAt" },
   });
 
+export const getCategories = () =>
+  api.get("/categories", {
+    params: { status: "published" },
+  });
 //pending - blog despription
 export const fetchBlogById = (id) => api.get(`/blogs/${id}`);
 

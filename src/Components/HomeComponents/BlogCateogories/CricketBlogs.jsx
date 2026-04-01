@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import CategoryWiseBlog from "./CategoryWiseBlog";
-import {
-  fetchCricketBlogs,
-  fetchFootballBlogs,
-} from "../../../Services/BlogServices";
+import { fetchCricketBlogs } from "../../../Services/BlogServices";
 
 export default function CricketBlogs() {
   const [blogs, setBlogs] = useState([]);

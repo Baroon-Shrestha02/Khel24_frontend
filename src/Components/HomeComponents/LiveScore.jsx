@@ -60,8 +60,8 @@ function FootballCard() {
 
   return (
     <div className="rounded-2xl bg-[#0f0d1f]/80 backdrop-blur-md border border-[rgba(139,120,255,0.15)] hover:border-[rgba(139,120,255,0.38)] transition-all duration-300 hover:-translate-y-px overflow-hidden cursor-pointer">
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.05]">
-        <span className="text-[10px] font-medium tracking-widest uppercase text-[#6b648a]">
+      <div className="flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 border-b border-white/5 min-w-0">
+        <span className="text-[10px] font-medium tracking-widest uppercase text-[#6b648a] truncate min-w-0">
           ⚽ {state.competition}
         </span>
         <div className="flex items-center gap-1.5">
@@ -72,38 +72,40 @@ function FootballCard() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between px-4 py-4 gap-2">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center px-2 sm:px-4 py-3 sm:py-4 gap-x-1 sm:gap-x-2 min-w-0">
         {[state.home, state.away].map((team, i) => (
           <React.Fragment key={i}>
             {i === 1 && (
-              <div className="flex flex-col items-center gap-1 min-w-[80px]">
-                <div className="flex items-center gap-2.5">
-                  <span className="text-[36px] font-bold text-white leading-none tabular-nums">
+              <div className="flex flex-col items-center justify-center gap-0.5 sm:gap-1 min-w-0 px-0.5 col-start-2 self-center">
+                <div className="flex items-center gap-1 sm:gap-2">
+                  <span className="text-[clamp(1.4rem,8.5vw,2.25rem)] sm:text-4xl font-bold text-white leading-none tabular-nums">
                     {state.home.score}
                   </span>
-                  <span className="text-[15px] text-[#3d3657] font-light">
+                  <span className="text-[13px] sm:text-[15px] text-[#3d3657] font-light shrink-0">
                     :
                   </span>
-                  <span className="text-[36px] font-bold text-white leading-none tabular-nums">
+                  <span className="text-[clamp(1.4rem,8.5vw,2.25rem)] sm:text-4xl font-bold text-white leading-none tabular-nums">
                     {state.away.score}
                   </span>
                 </div>
-                <span className="text-[10px] text-amber-400 font-medium tracking-wider">
+                <span className="text-[9px] sm:text-[10px] text-amber-400 font-medium tracking-wider">
                   LIVE
                 </span>
               </div>
             )}
-            <div className="flex flex-col items-center gap-2 flex-1">
+            <div
+              className={`flex flex-col items-center gap-1.5 sm:gap-2 min-w-0 ${i === 0 ? "col-start-1" : "col-start-3"}`}
+            >
               <div
-                className="w-11 h-11 rounded-xl flex items-center justify-center border"
+                className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center border shrink-0"
                 style={{ background: team.bg, borderColor: team.border }}
               >
                 <span
-                  className="w-3 h-3 rounded-full"
+                  className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full"
                   style={{ background: team.border }}
                 />
               </div>
-              <span className="text-[11px] font-medium text-[#c4bce0] text-center leading-tight">
+              <span className="text-[10px] sm:text-[11px] font-medium text-[#c4bce0] text-center leading-tight max-w-full px-0.5 wrap-break-word hyphens-auto">
                 {team.name}
               </span>
             </div>
@@ -187,8 +189,8 @@ function CricketCard() {
 
   return (
     <div className="rounded-2xl bg-[#0f0d1f]/80 backdrop-blur-md border border-[rgba(139,120,255,0.15)] hover:border-[rgba(139,120,255,0.38)] transition-all duration-300 hover:-translate-y-px overflow-hidden cursor-pointer">
-      <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/[0.05]">
-        <span className="text-[10px] font-medium tracking-widest uppercase text-[#6b648a]">
+      <div className="flex items-center justify-between gap-2 px-3 sm:px-4 py-2.5 border-b border-white/5 min-w-0">
+        <span className="text-[10px] font-medium tracking-widest uppercase text-[#6b648a] truncate min-w-0">
           🏏 {state.competition}
         </span>
         <div className="flex items-center gap-1.5">
@@ -199,31 +201,35 @@ function CricketCard() {
         </div>
       </div>
 
-      <div className="px-4 pt-3.5">
-        <div className="flex items-center justify-between mb-2.5">
-          <div className="flex items-center gap-2.5">
+      <div className="px-3 sm:px-4 pt-3.5 min-w-0">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-2.5 min-w-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
             <div
-              className="w-9 h-9 rounded-[10px] flex items-center justify-center border"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-[10px] flex items-center justify-center border shrink-0"
               style={{
                 background: "rgba(34,197,94,0.10)",
                 borderColor: "rgba(34,197,94,0.25)",
               }}
             >
-              <span className="text-xs font-semibold text-green-400">IND</span>
+              <span className="text-[10px] sm:text-xs font-semibold text-green-400">
+                IND
+              </span>
             </div>
-            <div>
-              <span className="text-[13px] font-medium text-[#e2deff]">
+            <div className="min-w-0">
+              <span className="text-xs sm:text-[13px] font-medium text-[#e2deff]">
                 {batting.team}
               </span>
-              <span className="text-[10px] text-[#6b648a] ml-1.5">batting</span>
+              <span className="text-[10px] text-[#6b648a] ml-1 sm:ml-1.5">
+                batting
+              </span>
             </div>
           </div>
-          <div className="text-right">
-            <span className="text-[22px] font-bold text-white tabular-nums">
+          <div className="text-left sm:text-right sm:shrink-0 pl-11 sm:pl-0">
+            <span className="text-lg sm:text-[22px] font-bold text-white tabular-nums">
               {batting.runs}
             </span>
-            <span className="text-[13px] text-[#6b648a]">/</span>
-            <span className="text-[15px] font-medium text-[#a395ff]">
+            <span className="text-xs sm:text-[13px] text-[#6b648a]">/</span>
+            <span className="text-sm sm:text-[15px] font-medium text-[#a395ff]">
               {batting.wickets}
             </span>
             <div className="text-[10px] text-[#6b648a]">{batting.innings}</div>
@@ -231,82 +237,86 @@ function CricketCard() {
         </div>
 
         <div
-          className="rounded-[10px] mb-3 px-3 py-2"
+          className="rounded-[10px] mb-3 px-2 sm:px-3 py-2 min-w-0"
           style={{
             background: "rgba(139,120,255,0.06)",
             border: "0.5px solid rgba(139,120,255,0.12)",
           }}
         >
-          <div className="flex justify-between items-center mb-1.5">
+          <div className="grid grid-cols-[minmax(0,1fr)_1.75rem_1.75rem_2.25rem] sm:grid-cols-[minmax(0,1fr)_1.5rem_1.5rem_2.5rem] gap-x-1 sm:gap-x-4 items-center mb-1.5">
             <span className="text-[10px] text-[#6b648a] tracking-wider">
               AT CREASE
             </span>
-            <div className="flex gap-4">
-              {["R", "B", "SR"].map((h) => (
-                <span
-                  key={h}
-                  className="text-[10px] text-[#6b648a] w-6 text-right"
-                >
-                  {h}
-                </span>
-              ))}
-            </div>
+            {["R", "B", "SR"].map((h) => (
+              <span
+                key={h}
+                className="text-[10px] text-[#6b648a] text-right tabular-nums"
+              >
+                {h}
+              </span>
+            ))}
           </div>
           {[batting.b1, batting.b2].map((b, i) => (
             <div
               key={i}
-              className="flex justify-between items-center mb-1 last:mb-0"
+              className="grid grid-cols-[minmax(0,1fr)_1.75rem_1.75rem_2.25rem] sm:grid-cols-[minmax(0,1fr)_1.5rem_1.5rem_2.5rem] gap-x-1 sm:gap-x-4 items-center mb-1 last:mb-0 min-w-0"
             >
-              <div className="flex items-center gap-1.5">
-                {i === 0 && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
+              <div className="flex items-center gap-1 sm:gap-1.5 min-w-0">
+                {i === 0 ? (
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+                ) : (
+                  <span className="w-1.5 shrink-0" aria-hidden />
                 )}
                 <span
-                  className={`text-[12px] font-medium ${i === 0 ? "text-[#e2deff]" : "text-[#c4bce0] ml-3"}`}
+                  className={`text-[11px] sm:text-[12px] font-medium truncate ${i === 0 ? "text-[#e2deff]" : "text-[#c4bce0]"}`}
                 >
                   {b.name}
                 </span>
               </div>
-              <div className="flex gap-4">
-                <span className="text-[12px] font-medium text-[#e2deff] w-6 text-right">
-                  {b.runs}
-                </span>
-                <span className="text-[12px] text-[#8a83a8] w-6 text-right">
-                  {b.balls}
-                </span>
-                <span className="text-[12px] text-[#8a83a8] w-6 text-right">
-                  {b.balls > 0 ? ((b.runs / b.balls) * 100).toFixed(1) : "0.0"}
-                </span>
-              </div>
+              <span className="text-[11px] sm:text-[12px] font-medium text-[#e2deff] text-right tabular-nums">
+                {b.runs}
+              </span>
+              <span className="text-[11px] sm:text-[12px] text-[#8a83a8] text-right tabular-nums">
+                {b.balls}
+              </span>
+              <span className="text-[11px] sm:text-[12px] text-[#8a83a8] text-right tabular-nums">
+                {b.balls > 0 ? ((b.runs / b.balls) * 100).toFixed(1) : "0.0"}
+              </span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="px-4 pb-3.5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+      <div className="px-3 sm:px-4 pb-3.5 min-w-0">
+        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-2">
+          <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
             <div
-              className="w-9 h-9 rounded-[10px] flex items-center justify-center border"
+              className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-[10px] flex items-center justify-center border shrink-0"
               style={{
                 background: "rgba(59,130,246,0.10)",
                 borderColor: "rgba(59,130,246,0.25)",
               }}
             >
-              <span className="text-xs font-semibold text-blue-400">ENG</span>
+              <span className="text-[10px] sm:text-xs font-semibold text-blue-400">
+                ENG
+              </span>
             </div>
-            <div>
-              <span className="text-[13px] font-medium text-[#e2deff]">
+            <div className="min-w-0">
+              <span className="text-xs sm:text-[13px] font-medium text-[#e2deff]">
                 {bowling.team}
               </span>
-              <span className="text-[10px] text-[#6b648a] ml-1.5">bowling</span>
+              <span className="text-[10px] text-[#6b648a] ml-1 sm:ml-1.5">
+                bowling
+              </span>
             </div>
           </div>
-          <div className="text-right">
-            <span className="text-[12px] font-medium text-[#c4bce0]">
+          <div className="text-right min-w-0 sm:max-w-[55%]">
+            <span className="text-[11px] sm:text-[12px] font-medium text-[#c4bce0] wrap-break-word">
               {bowling.bowler}
             </span>
-            <div className="text-[10px] text-[#6b648a]">{bowling.figures}</div>
+            <div className="text-[10px] text-[#6b648a] tabular-nums">
+              {bowling.figures}
+            </div>
           </div>
         </div>
       </div>
@@ -323,9 +333,9 @@ export default function LiveScoreSidebar() {
   }, []);
 
   return (
-    <aside className="w-full md:w-80 shrink-0 ">
+    <aside className="w-full max-w-full md:w-80 shrink-0 min-w-0">
       {/* Background image container — fixed on md+, normal flow on mobile */}
-      <div className="md:h-[80vh]">
+      <div className="relative min-h-[260px] md:min-h-[380px] md:h-[80vh] rounded-2xl overflow-hidden">
         {/* Background image */}
         <div
           className="absolute inset-0 bg-cover bg-center rounded-2xl overflow-hidden"
@@ -337,7 +347,7 @@ export default function LiveScoreSidebar() {
         <div className="absolute inset-0 bg-[#080715]/80 backdrop-blur-[2px] rounded-2xl" />
 
         {/* Content */}
-        <div className="relative z-10 h-full flex flex-col gap-3 p-4 text-white overflow-y-auto ">
+        <div className="relative z-10 h-full flex flex-col gap-3 p-3 sm:p-4 text-white overflow-y-auto overflow-x-hidden min-w-0">
           {/* Header */}
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-medium">

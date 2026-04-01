@@ -11,6 +11,7 @@ import { MdSportsCricket, MdBusiness, MdInsertDriveFile } from "react-icons/md";
 // meta icons
 import { FiCalendar, FiUser, FiArrowRight } from "react-icons/fi";
 import BlogCard from "../SharedComponents/BlogCard";
+import { blogDetailPath } from "../../Utils/blogPaths";
 
 // ---------------- CATEGORY CONFIG ----------------
 const categoryConfig = {
@@ -179,17 +180,19 @@ export default function LatestBlog() {
 
   //   console.log(blogs[0].heroImage.url);
   return (
-    <section id="news" className="container mx-auto px-4 py-10">
+    <section id="news" className="container mx-auto px-3 sm:px-4 py-10">
       {/* Heading */}
       <motion.div
         ref={headingRef}
         initial={{ opacity: 0, y: 20 }}
         animate={headingInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 mb-8"
+        className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-6 sm:mb-8"
       >
         <div className="w-1 h-8 bg-[#00569e] rounded-full" />
-        <h2 className="text-3xl font-extrabold text-gray-900">Latest News</h2>
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
+          Latest News
+        </h2>
       </motion.div>
 
       {/* Error */}
