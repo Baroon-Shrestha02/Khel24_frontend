@@ -3,10 +3,7 @@ import React from "react";
 
 export default function HeroSection() {
   return (
-    <section
-      className="relative w-full flex items-center justify-center overflow-hidden "
-      style={{ minHeight: "80vh" }}
-    >
+    <section className="relative w-full flex items-center justify-center overflow-hidden min-h-[60vh] md:min-h-[80vh] py-14 md:py-20">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -23,9 +20,9 @@ export default function HeroSection() {
       />
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-12 rounded-3xl">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 rounded-3xl min-w-0">
         {/* Text Block */}
-        <div className="max-w-xl text-white">
+        <div className="max-w-xl text-white text-left">
           {/* Eyebrow label */}
           <span
             className="inline-block mb-4 px-3 py-1 rounded-full text-xs font-semibold tracking-widest uppercase"

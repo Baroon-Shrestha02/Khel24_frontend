@@ -1,5 +1,6 @@
 // src/Components/Shared/CategoryBlogsView.jsx
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   LayoutGrid,
   List,
@@ -7,6 +8,7 @@ import {
   AlertCircle,
   ArrowRight,
 } from "lucide-react";
+import { blogDetailPath } from "../../../Utils/blogPaths";
 
 export default function CategoryBlogsView({
   categoryTitle = "विशेष",
@@ -14,6 +16,14 @@ export default function CategoryBlogsView({
   fetchFn,
   onBlogClick,
 }) {
+  const navigate = useNavigate();
+  const goToBlog =
+    onBlogClick ??
+    ((blog) => {
+      const path = blogDetailPath(blog);
+      if (path) navigate(path);
+    });
+
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -83,12 +93,12 @@ export default function CategoryBlogsView({
         {/* Featured Blog */}
         <div
           className="grid grid-cols-1 md:grid-cols-[55%_45%] bg-white rounded-xl overflow-hidden shadow-md mb-7 cursor-pointer"
-          onClick={() => onBlogClick?.(featured)}
+          onClick={() => goToBlog(featured)}
         >
           {/* Fixed height featured image */}
           <div className="h-[300px] md:h-[420px] overflow-hidden">
             <img
-              src={featured.heroImage.url}
+              src={featured.heroImage?.url}
               alt={featured.title}
               className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
             />
@@ -105,9 +115,10 @@ export default function CategoryBlogsView({
             )}
             {/* Read More Button */}
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                onBlogClick?.(featured);
+                goToBlog(featured);
               }}
               className="self-start flex items-center gap-2 px-5 py-2.5 bg-[#e01a22] text-white text-sm font-semibold rounded-lg hover:bg-[#c01020] transition-colors duration-150 mt-1"
             >
@@ -155,14 +166,14 @@ export default function CategoryBlogsView({
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
                 {restBlogs.map((blog) => (
                   <div
-                    key={blog.id}
-                    onClick={() => onBlogClick?.(blog)}
+                    key={blog._id ?? blog.id}
+                    onClick={() => goToBlog(blog)}
                     className="bg-white rounded-xl overflow-hidden shadow-sm cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg flex flex-col"
                   >
                     {/* Fixed height grid card image */}
                     <div className="h-44 overflow-hidden shrink-0">
                       <img
-                        src={blog?.heroImage.url}
+                        src={blog?.heroImage?.url}
                         alt={blog?.title}
                         className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                       />
@@ -184,14 +195,14 @@ export default function CategoryBlogsView({
               <div className="flex flex-col gap-3.5">
                 {restBlogs.map((blog) => (
                   <div
-                    key={blog.id}
-                    onClick={() => onBlogClick?.(blog)}
+                    key={blog._id ?? blog.id}
+                    onClick={() => goToBlog(blog)}
                     className="bg-white rounded-xl overflow-hidden shadow-sm flex cursor-pointer transition-all duration-200 hover:translate-x-1 hover:shadow-md"
                   >
                     {/* Fixed height list card image */}
                     <div className="w-36 sm:w-48 h-28 sm:h-32 shrink-0 overflow-hidden">
                       <img
-                        src={blog?.heroImage.url}
+                        src={blog?.heroImage?.url}
                         alt={blog?.title}
                         className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                       />

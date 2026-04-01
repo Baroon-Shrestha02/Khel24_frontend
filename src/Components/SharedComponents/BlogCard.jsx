@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -72,28 +73,21 @@ export default function BlogCard({
   tag = "📰",
   index = 0,
   onReadMore,
+  url,
 }) {
-  return (
-    <>
-      <style>{`
-        .blog-card-img { transition: transform 0.6s cubic-bezier(0.22,1,0.36,1); }
-        .blog-card:hover .blog-card-img { transform: scale(1.07); }
-        .read-arrow { display: inline-block; transition: transform 0.3s ease; }
-        .blog-card:hover .read-arrow { transform: translateX(5px); }
-      `}</style>
-
-      <motion.article
-        custom={index}
-        initial="hidden"
-        animate="visible"
-        variants={fadeUp}
-        className="blog-card group bg-white rounded-2xl overflow-hidden flex flex-col cursor-pointer"
-        whileHover={{ y: -5 }}
-        transition={{ type: "spring", stiffness: 300, damping: 24 }}
-        style={{
-          boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05)",
-        }}
-      >
+  const card = (
+    <motion.article
+      custom={index}
+      initial="hidden"
+      animate="visible"
+      variants={fadeUp}
+      className="blog-card group bg-white rounded-2xl overflow-hidden flex flex-col cursor-pointer"
+      whileHover={{ y: -5 }}
+      transition={{ type: "spring", stiffness: 300, damping: 24 }}
+      style={{
+        boxShadow: "0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05)",
+      }}
+    >
         {/* ── Image ── */}
         <div className="overflow-hidden h-44 relative">
           <img
@@ -165,16 +159,44 @@ export default function BlogCard({
 
           {/* Footer */}
           <div className="flex items-center justify-between">
-            <button
-              onClick={onReadMore}
-              className="flex items-center gap-1.5 text-[13px] font-semibold"
-              style={{ color: accent }}
-            >
-              Read More <span className="read-arrow">→</span>
-            </button>
+            {url ? (
+              <span
+                className="flex items-center gap-1.5 text-[13px] font-semibold"
+                style={{ color: accent }}
+              >
+                Read More <span className="read-arrow">→</span>
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={onReadMore}
+                className="flex items-center gap-1.5 text-[13px] font-semibold"
+                style={{ color: accent }}
+              >
+                Read More <span className="read-arrow">→</span>
+              </button>
+            )}
           </div>
         </div>
-      </motion.article>
+    </motion.article>
+  );
+
+  return (
+    <>
+      <style>{`
+        .blog-card-img { transition: transform 0.6s cubic-bezier(0.22,1,0.36,1); }
+        .blog-card:hover .blog-card-img { transform: scale(1.07); }
+        .read-arrow { display: inline-block; transition: transform 0.3s ease; }
+        .blog-card:hover .read-arrow { transform: translateX(5px); }
+      `}</style>
+
+      {url ? (
+        <Link to={url} className="block no-underline text-inherit">
+          {card}
+        </Link>
+      ) : (
+        card
+      )}
     </>
   );
 }

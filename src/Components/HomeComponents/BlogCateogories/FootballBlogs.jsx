@@ -21,6 +21,8 @@ export default function FootballBlogs() {
     fetchBlogs();
   }, []);
 
+  console.log(blogs);
+
   return (
     <div>
       <CategoryWiseBlog
@@ -29,7 +31,6 @@ export default function FootballBlogs() {
           title: "Peaks Into The World of Football",
           excerpt: "Your excerpt here...",
           image: "home/football.jpg",
-          slug: "/blog/post-slug",
         }}
         sidePosts={[
           {
@@ -38,7 +39,7 @@ export default function FootballBlogs() {
             title: blogs[0]?.title,
             excerpt: blogs[0]?.summary,
             image: blogs[0]?.heroImage.url,
-            slug: "#",
+            to: `/blog/${blogs.id}`,
           },
           {
             id: 2,
@@ -46,7 +47,7 @@ export default function FootballBlogs() {
             title: blogs[1]?.title,
             excerpt: blogs[2]?.summary,
             image: blogs[1]?.heroImage.url,
-            slug: "#",
+            to: `/blog/${blogs.id}`,
           },
         ].filter(Boolean)}
       />

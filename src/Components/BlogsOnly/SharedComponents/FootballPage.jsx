@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import CategoryBlogsView from "./CategoryBlogsView";
 import { fetchFootballBlogs } from "../../../Services/BlogServices";
+import { blogDetailPath } from "../../../Utils/blogPaths";
 
 export default function FootballPage() {
   const navigate = useNavigate();
@@ -13,7 +14,10 @@ export default function FootballPage() {
       categoryTitle="फुटबल विशेष"
       moreTitle="थप फुटबल समाचार"
       fetchFn={fetchFootballBlogs}
-      onBlogClick={(blog) => navigate(`/blogs/${blog.id}`)}
+      onBlogClick={(blog) => {
+        const path = blogDetailPath(blog);
+        if (path) navigate(path);
+      }}
     />
   );
 }
