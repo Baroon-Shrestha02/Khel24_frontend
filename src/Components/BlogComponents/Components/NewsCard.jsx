@@ -1,8 +1,10 @@
 import { Medal, Clock, User, File } from "lucide-react";
 import SectionTitle from "./shared/SectionTitle";
 import { useEffect, useRef, useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchPublishedBlogs } from "../../../Services/BlogServices";
 import { formatDistanceToNow } from "date-fns";
+import { blogDetailPath } from "../../../Utils/blogPaths";
 
 const ACCENTS = [
   { bar: "#16a34a", bg: "rgba(22,163,74,0.1)", text: "#14532d" },
@@ -13,9 +15,16 @@ const ACCENTS = [
 
 function NewsCardItem({ article, index, visible }) {
   const accent = ACCENTS[index % ACCENTS.length];
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    const path = blogDetailPath(article);
+    if (path) navigate(path);
+  };
 
   return (
     <div
+      onClick={handleClick}
       style={{ transitionDelay: `${index * 80}ms` }}
       className={`group bg-white rounded-xl overflow-hidden border border-slate-100 hover:border-slate-200 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer
         ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}
