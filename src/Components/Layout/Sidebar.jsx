@@ -20,7 +20,7 @@ export default function Sidebar({ isSidebarOpen, setSidebarOpen }) {
     { to: "/dashboard", icon: HiChartPie, label: "Dashboard" },
     { to: "/dashboard-users", icon: HiUser, label: "Users" },
     { to: "/dashboard-blogs", icon: FilesIcon, label: "Blogs" },
-    { to: "/dashboard-stories", icon: SiStoryblok, label: "Stories" },
+    // { to: "/dashboard-stories", icon: SiStoryblok, label: "Stories" },
     { to: "/", icon: HiHome, label: "Back to Home" },
   ];
 
@@ -46,13 +46,13 @@ export default function Sidebar({ isSidebarOpen, setSidebarOpen }) {
       <div className="p-4 flex items-center justify-center border-b border-gray-100">
         <div className="flex items-center">
           {/* <div className="bg-[#0D105A] text-white rounded-lg w-10 h-10 flex items-center justify-center text-lg font-bold m2"></div> */}
-          {/* {isSidebarOpen && (
+          <img src="main/favicon.png" alt="" className="h-8" />
+          {isSidebarOpen && (
             <span className="font-bold text-xl bg-linear-to-r from-[#0D105A] to-[#4B50BE] bg-clip-text text-transparent">
-            Khel 24 <br /> Live
+              Playbook
             </span>
-            )} */}
+          )}
         </div>
-        <img src="main/favicon.jpeg" alt="" className="h-10" />
       </div>
       {/* Navigation Links */}
       <nav className="mt-6">

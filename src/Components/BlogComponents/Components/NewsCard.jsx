@@ -1,7 +1,8 @@
-import { Medal, Clock, User } from "lucide-react";
+import { Medal, Clock, User, File } from "lucide-react";
 import SectionTitle from "./shared/SectionTitle";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { fetchPublishedBlogs } from "../../../Services/BlogServices";
+import { formatDistanceToNow } from "date-fns";
 
 const ACCENTS = [
   { bar: "#16a34a", bg: "rgba(22,163,74,0.1)", text: "#14532d" },
@@ -35,7 +36,7 @@ function NewsCardItem({ article, index, visible }) {
           <img
             src={article.heroImage.url}
             alt={article.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -63,12 +64,14 @@ function NewsCardItem({ article, index, visible }) {
             <span className="flex items-center gap-1 text-[11px] text-slate-400">
               <User size={10} />
               <span className="font-medium text-slate-600 max-w-[80px] truncate">
-                {article.author}
+                Admin
               </span>
             </span>
             <span className="flex items-center gap-1 text-[11px] text-slate-400">
               <Clock size={10} />
-              {article.date}
+              {formatDistanceToNow(new Date(article.createdAt), {
+                addSuffix: true,
+              })}
             </span>
           </div>
         </div>
@@ -102,7 +105,11 @@ function SkeletonCard() {
   );
 }
 
-export default function SpecialSportsNews() {
+export default function SpecialSportsNews({
+  search = "",
+  category = "All Category",
+  filter = "",
+}) {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
@@ -129,20 +136,75 @@ export default function SpecialSportsNews() {
       .finally(() => setLoading(false));
   }, []);
 
+  /* ── Apply search, category, and sort filters ── */
+  const filtered = useMemo(() => {
+    let list = blogs.map((b) => ({
+      ...b,
+      _createdAt: new Date(b.createdAt).getTime() || 0,
+    }));
+
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(
+        (b) =>
+          b.title?.toLowerCase().includes(q) ||
+          b.summary?.toLowerCase().includes(q) ||
+          b.excerpt?.toLowerCase().includes(q),
+      );
+    }
+
+    if (category && category !== "All Blogs") {
+      list = list.filter(
+        (b) => b.category?.toLowerCase() === category.toLowerCase(),
+      );
+    }
+
+    if (filter === "Most Recent") {
+      list.sort((a, b) => b._createdAt - a._createdAt);
+    }
+
+    if (filter === "Oldest First") {
+      list.sort((a, b) => a._createdAt - b._createdAt);
+    }
+
+    return list;
+  }, [blogs, search, category, filter]);
+
   return (
     <div ref={sectionRef}>
       <SectionTitle icon={Medal} label="विशेष समाचार" />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
-        {loading
-          ? Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)
-          : blogs.map((article, index) => (
-              <NewsCardItem
-                key={article.id}
-                article={article}
-                index={index}
-                visible={visible}
-              />
-            ))}
+
+      {/* Result count */}
+      {!loading && (
+        <p className="text-[13px] text-slate-400 mt-3 mb-1">
+          {filtered.length} {filtered.length === 1 ? "article" : "articles"}{" "}
+          found
+          {category !== "All Category" && ` in "${category}"`}
+          {search && ` for "${search}"`}
+        </p>
+      )}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+        {loading ? (
+          Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
+        ) : filtered.length > 0 ? (
+          filtered.map((article, index) => (
+            <NewsCardItem
+              key={article.id}
+              article={article}
+              index={index}
+              visible={visible}
+            />
+          ))
+        ) : (
+          <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
+            <File size={40} className="text-slate-200 mb-3" />
+            <p className="text-slate-400 text-sm">No articles found.</p>
+            <p className="text-slate-300 text-xs mt-1">
+              Try adjusting your search or filters.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
