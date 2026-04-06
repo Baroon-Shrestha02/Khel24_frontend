@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Search } from "lucide-react";
 import FeaturedCard from "./Components/FeaturedCard";
 import LatestNews from "./Components/LatestNews";
 import SpecialSportsNews from "./Components/NewsCard";
@@ -10,6 +12,7 @@ import { fetchFeaturedBlog } from "../../Services/BlogServices";
 
 export default function BlogMain() {
   const [blogs, setBlogs] = useState();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getFeatured = async () => {
@@ -21,7 +24,6 @@ export default function BlogMain() {
         console.error(error);
       }
     };
-
     getFeatured();
   }, []);
 
@@ -30,7 +32,19 @@ export default function BlogMain() {
       <SubBar />
 
       <div className="container mx-auto px-4 py-6 flex flex-col gap-6">
-        <div className="grid gird-cols-1 md:grid-cols-[1fr_300px] gap-5">
+        {/* Browse button row */}
+        <div className="flex items-center justify-between">
+          <div />
+          <button
+            onClick={() => navigate("/browse")}
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-full text-[13px] font-medium text-slate-600 hover:border-violet-400 hover:text-violet-600 hover:bg-violet-50 transition-all duration-200 shadow-sm"
+          >
+            <Search size={13} />
+            Browse & Filter Articles
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-5">
           <FeaturedCard article={blogs} />
           <LatestNews />
         </div>

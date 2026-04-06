@@ -22,7 +22,7 @@ export default function HeroSection() {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 rounded-3xl min-w-0">
         {/* Text Block */}
-        <div className="max-w-xl text-white text-left">
+        <div className="max-w-xl w-full text-white text-left min-w-0">
           {/* Eyebrow label */}
           <span
             className="inline-block mb-4 px-3 py-1 rounded-full text-xs font-semibold tracking-widest uppercase"
@@ -68,16 +68,16 @@ export default function HeroSection() {
             curated, compelling, and always current.
           </p>
 
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-3 sm:gap-4">
             <a
               href="#news"
-              className="inline-block px-8 py-3 rounded-lg font-semibold text-white transition-all duration-200 bg-[#ec1f33]"
+              className="inline-block px-6 sm:px-8 py-3 rounded-lg font-semibold text-white transition-all duration-200 bg-[#ec1f33] text-center min-w-0"
             >
               Explore News
             </a>
             <a
               href="#trending"
-              className="inline-block px-8 py-3 rounded-lg font-semibold transition-all duration-200 border border-white"
+              className="inline-block px-6 sm:px-8 py-3 rounded-lg font-semibold transition-all duration-200 border border-white text-center min-w-0"
             >
               Trending
             </a>

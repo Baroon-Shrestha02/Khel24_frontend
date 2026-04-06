@@ -14,8 +14,7 @@ export default function LatestNews() {
       try {
         const res = await fetchPublishedBlogs();
 
-        // take latest 6 blogs
-        const latest = res.data?.data?.slice(0, 5) || [];
+        const latest = res.data?.data?.slice(0, 4) || [];
         setBlogs(latest);
       } catch (error) {
         console.error("Failed to fetch latest blogs:", error);

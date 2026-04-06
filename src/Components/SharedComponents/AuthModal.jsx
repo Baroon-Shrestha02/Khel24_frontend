@@ -1,6 +1,7 @@
 // src/Components/AuthModal.jsx
 import { useState } from "react";
 import { useAuth } from "../../Utils/AuthContext";
+import toast from "react-hot-toast";
 
 export default function AuthModal({ onClose }) {
   const { login, register } = useAuth();
@@ -37,10 +38,12 @@ export default function AuthModal({ onClose }) {
       setError("");
       if (mode === "login") {
         await login({ email: formData.email, password: formData.password });
+        toast.success("Login successful");
       } else {
         await register(formData);
         // Auto-login after successful registration
         await login({ email: formData.email, password: formData.password });
+        toast.success("Registration successful");
       }
       onClose?.();
     } catch (err) {
@@ -79,12 +82,7 @@ export default function AuthModal({ onClose }) {
 
         {/* Logo */}
         <div className="mb-6">
-          <p className="text-3xl font-bold text-[#00569e] leading-none tracking-tight">
-            KhelKhabar
-          </p>
-          <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest mt-1">
-            Sports News
-          </p>
+          <img src="main/logo2.png" alt="" />
         </div>
 
         {/* Title */}
@@ -237,21 +235,6 @@ export default function AuthModal({ onClose }) {
             </>
           )}
         </p>
-
-        {/* <div className="flex items-center gap-3 my-5">
-          <div className="flex-1 h-px bg-gray-100" />
-          <span className="text-xs text-gray-400">Signin With</span>
-          <div className="flex-1 h-px bg-gray-100" />
-        </div>
-
-        <div className="flex justify-center gap-3">
-          <button className="w-10 h-10 rounded-full bg-[#ea4335] text-white font-bold text-base flex items-center justify-center hover:opacity-85 hover:scale-105 transition-all">
-            G
-          </button>
-          <button className="w-10 h-10 rounded-full bg-[#1877f2] text-white font-bold text-base flex items-center justify-center hover:opacity-85 hover:scale-105 transition-all">
-            f
-          </button>
-        </div> */}
       </div>
     </div>
   );
