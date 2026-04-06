@@ -168,12 +168,12 @@ export default function StoryModal() {
 
       {/* ── Single story trigger circle ── */}
       {loading ? (
-        <div className="sm-shimmer w-[56px] h-[56px] rounded-full flex-shrink-0" />
+        <div className="sm-shimmer w-[46px] h-[46px] rounded-full shrink-0" />
       ) : stories.length > 0 ? (
         <button
           onClick={openModal}
           aria-label="View stories"
-          className="relative w-[56px] h-[56px] rounded-full border-none bg-transparent cursor-pointer flex-shrink-0 transition-transform duration-200 hover:scale-105 p-0"
+          className="relative w-[46px] h-[46px] rounded-full border-none bg-transparent cursor-pointer flex-shrink-0 transition-transform duration-200 hover:scale-105 p-0"
         >
           <div
             className="w-full h-full rounded-full p-[2.5px] flex items-center justify-center"
@@ -317,7 +317,6 @@ export default function StoryModal() {
               />
             </div>
 
-            {/* ── Tap zones ── */}
             <button
               className="absolute top-0 bottom-0 left-0 w-[42%] z-10 bg-transparent border-none cursor-pointer"
               onClick={goPrev}

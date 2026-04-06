@@ -1,80 +1,148 @@
-import { Medal } from "lucide-react";
-import Tag from "./shared/Tag";
+import { Medal, Clock, User } from "lucide-react";
 import SectionTitle from "./shared/SectionTitle";
+import { useEffect, useRef, useState } from "react";
+import { fetchPublishedBlogs } from "../../../Services/BlogServices";
 
-const MAIN_NEWS = [
-  {
-    id: 2,
-    tag: "फुटबल",
-    tagColor: "bg-green-600",
-    title: "बागमती प्रदेश फुटबल लिग: काठमाडौं एफसी च्याम्पियन",
-    excerpt:
-      "काठमाडौं एफसीले फाइनलमा मनाङ मार्स्याङ्दीलाई २-१ गोलले हराउँदै खिताब जित्यो।",
-    author: "सन्तोष थापा",
-    date: "१७ चैत २०८२",
-    readTime: "३ मिनेट",
-    borderColor: "border-t-green-600",
-  },
-  {
-    id: 3,
-    tag: "भलिबल",
-    tagColor: "bg-amber-600",
-    title: "अनिता माने — नेपालकी 'भलिबल क्वीन' जो विश्वमञ्चमा चम्किइन्",
-    excerpt:
-      "दाङकी अनिता मानेले दक्षिण एसियाली खेलकुदमा स्वर्ण पदक जितेर नेपाललाई गौरवान्वित तुल्याइन्।",
-    author: "प्रिया श्रेष्ठ",
-    date: "१६ चैत २०८२",
-    readTime: "४ मिनेट",
-    borderColor: "border-t-amber-600",
-  },
-  {
-    id: 4,
-    tag: "एथलेटिक्स",
-    tagColor: "bg-violet-600",
-    title: "गीता राना: पहाडकी छोरी जसले एसियाली धावनमा इतिहास रच्यो",
-    excerpt:
-      "मुस्ताङकी गीता रानाले एसियाली एथलेटिक्स च्याम्पियनसिपमा ५०००m दौडमा रजत पदक जिती।",
-    author: "अमित गुरुङ",
-    date: "१५ चैत २०८२",
-    readTime: "४ मिनेट",
-    borderColor: "border-t-violet-600",
-  },
+const ACCENTS = [
+  { bar: "#16a34a", bg: "rgba(22,163,74,0.1)", text: "#14532d" },
+  { bar: "#d97706", bg: "rgba(217,119,6,0.1)", text: "#78350f" },
+  { bar: "#7c3aed", bg: "rgba(124,58,237,0.1)", text: "#3b0764" },
+  { bar: "#0284c7", bg: "rgba(2,132,199,0.1)", text: "#0c4a6e" },
 ];
 
-function NewsCardItem({ article }) {
+function NewsCardItem({ article, index, visible }) {
+  const accent = ACCENTS[index % ACCENTS.length];
+
   return (
     <div
-      className={`bg-white rounded-xl overflow-hidden border border-slate-100 border-t-4 ${article.borderColor} shadow-sm hover:-translate-y-1 hover:shadow-lg transition-all duration-200 cursor-pointer`}
+      style={{ transitionDelay: `${index * 80}ms` }}
+      className={`group bg-white rounded-xl overflow-hidden border border-slate-100 hover:border-slate-200 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer
+        ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}
     >
-      <div className="p-4">
-        <Tag label={article.tag} colorClass={article.tagColor} />
-        <h3 className="font-bold text-[15px] text-slate-900 leading-snug mt-2 mb-2">
+      <div className="h-[3px] w-full" style={{ background: accent.bar }} />
+
+      <div className="px-4 pt-4 pb-3">
+        <h3 className="font-extrabold text-center text-[18px] text-slate-900 leading-snug line-clamp-2">
           {article.title}
         </h3>
-        <p className="text-[13px] text-slate-500 leading-relaxed mb-3">
-          {article.excerpt}
+      </div>
+
+      <div
+        className="mx-4 rounded-lg overflow-hidden"
+        style={{ aspectRatio: "16/9", background: "#f1f5f9" }}
+      >
+        {article.heroImage?.url ? (
+          <img
+            src={article.heroImage.url}
+            alt={article.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <Medal size={28} className="text-slate-300" />
+          </div>
+        )}
+      </div>
+
+      <div className="px-4 pt-3 pb-4 flex flex-col gap-2.5">
+        <p className="text-[12px] text-slate-500 leading-relaxed line-clamp-2">
+          {article.summary}
         </p>
-        <div className="flex justify-between items-center border-t border-slate-100 pt-2.5">
-          <span className="text-xs font-semibold text-slate-700">
-            ✍️ {article.author}
+
+        <div className="border-t border-slate-100" />
+
+        <div className="flex items-center justify-between flex-wrap gap-1.5">
+          <span
+            className="text-[10px] font-medium uppercase tracking-wider px-2.5 py-1 rounded-full"
+            style={{ background: accent.bg, color: accent.text }}
+          >
+            {article.category || article.tag || "समाचार"}
           </span>
-          <span className="text-[11px] text-slate-400">
-            {article.date} · {article.readTime}
-          </span>
+
+          <div className="flex items-center gap-2.5">
+            <span className="flex items-center gap-1 text-[11px] text-slate-400">
+              <User size={10} />
+              <span className="font-medium text-slate-600 max-w-[80px] truncate">
+                {article.author}
+              </span>
+            </span>
+            <span className="flex items-center gap-1 text-[11px] text-slate-400">
+              <Clock size={10} />
+              {article.date}
+            </span>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-export default function SpecialSportsNews({ articles = MAIN_NEWS }) {
+function SkeletonCard() {
   return (
-    <div>
+    <div className="bg-white rounded-xl border border-slate-100 overflow-hidden">
+      <div className="h-[3px] w-full bg-slate-100 animate-pulse" />
+      <div className="px-4 pt-4 pb-3 space-y-2 animate-pulse">
+        <div className="h-3.5 bg-slate-100 rounded w-4/5" />
+        <div className="h-3.5 bg-slate-100 rounded w-3/5" />
+      </div>
+      <div
+        className="mx-4 rounded-lg bg-slate-100 animate-pulse"
+        style={{ aspectRatio: "16/9" }}
+      />
+      <div className="px-4 pt-3 pb-4 space-y-2.5 animate-pulse">
+        <div className="h-3 bg-slate-100 rounded w-full" />
+        <div className="h-3 bg-slate-100 rounded w-2/3" />
+        <div className="border-t border-slate-100" />
+        <div className="flex items-center justify-between">
+          <div className="h-5 w-14 bg-slate-100 rounded-full" />
+          <div className="h-3 w-28 bg-slate-100 rounded" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function SpecialSportsNews() {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [visible, setVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    fetchPublishedBlogs()
+      .then((res) => setBlogs(res.data?.data || []))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  return (
+    <div ref={sectionRef}>
       <SectionTitle icon={Medal} label="विशेष समाचार" />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {articles.map((a) => (
-          <NewsCardItem key={a.id} article={a} />
-        ))}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-5">
+        {loading
+          ? Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)
+          : blogs.map((article, index) => (
+              <NewsCardItem
+                key={article.id}
+                article={article}
+                index={index}
+                visible={visible}
+              />
+            ))}
       </div>
     </div>
   );

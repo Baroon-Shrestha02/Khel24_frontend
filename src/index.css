@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+.article-html-body h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 24px 0 16px;
+  color: #0f172a;
+}
+
+.article-html-body p {
+  margin-bottom: 18px;
+  line-height: 2;
+}
+
+.article-html-body ul {
+  list-style: disc;
+  padding-left: 24px;
+  margin: 16px 0;
+}
+
+.article-html-body li {
+  margin-bottom: 8px;
+}
+
+.article-html-body strong {
+  font-weight: 700;
+}

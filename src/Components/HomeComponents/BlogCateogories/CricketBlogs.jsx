@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import CategoryWiseBlog from "./CategoryWiseBlog";
 import { fetchCricketBlogs } from "../../../Services/BlogServices";
+import { blogDetailPath } from "../../../Utils/blogPaths";
 
 export default function CricketBlogs() {
   const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [_loading, setLoading] = useState(true);
+  const [_error, setError] = useState(null);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -29,26 +30,16 @@ export default function CricketBlogs() {
           title: "Peaks Into The World of Cricket",
           excerpt: "Your excerpt here...",
           image: "home/cricket.jpg",
-          slug: "/blog/post-slug",
+          to: blogDetailPath(blogs[0]),
         }}
-        sidePosts={[
-          {
-            id: 1,
-            category: "Cricket",
-            title: blogs[0]?.title,
-            excerpt: blogs[0]?.summary,
-            image: blogs[0]?.heroImage.url,
-            slug: "#",
-          },
-          {
-            id: 2,
-            category: "Cricket",
-            title: blogs[1]?.title,
-            excerpt: blogs[2]?.summary,
-            image: blogs[1]?.heroImage.url,
-            slug: "#",
-          },
-        ].filter(Boolean)}
+        sidePosts={blogs.slice(0, 2).map((blog) => ({
+          id: blog._id,
+          category: "Cricket",
+          title: blog.title,
+          excerpt: blog.summary,
+          image: blog.heroImage?.url,
+          to: blogDetailPath(blog),
+        }))}
       />
     </div>
   );

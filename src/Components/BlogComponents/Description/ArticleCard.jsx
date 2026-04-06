@@ -71,7 +71,7 @@ export default function ArticleCard({
       <img
         src={article.img}
         alt={article.title}
-        className="w-full object-cover block max-h-[480px]"
+        className="w-full object-contain block max-h-[480px]"
       />
 
       <div className="px-5 pt-5 pb-6">
@@ -98,22 +98,28 @@ export default function ArticleCard({
           </div>
         )}
 
-        {article.body.map((block, i) =>
-          block.type === "html" ? (
+        <div className="article-content">
+          {article.content ? (
             <div
-              key={i}
-              className="article-html-body text-[15px] text-slate-800 mb-4"
-              dangerouslySetInnerHTML={{ __html: block.html }}
+              className="article-html-body text-[15px] text-slate-800 leading-[2.1] mb-4"
+              dangerouslySetInnerHTML={{ __html: article.content }}
             />
           ) : (
-            <p
-              key={i}
-              className="text-[15px] text-slate-800 leading-[2.1] mb-4"
-            >
-              {block.text}
-            </p>
-          ),
-        )}
+            article.body?.map((block, i) =>
+              block.type === "html" ? (
+                <div
+                  key={i}
+                  className="article-html-body mb-4"
+                  dangerouslySetInnerHTML={{ __html: block.html }}
+                />
+              ) : (
+                <p key={i} className="mb-4 leading-[2.1]">
+                  {block.text}
+                </p>
+              ),
+            )
+          )}
+        </div>
 
         {article.quote ? (
           <blockquote className="border-l-4 border-red-600 bg-red-50 rounded-r-xl px-5 py-4 my-5 italic text-slate-600 text-sm leading-relaxed">
@@ -123,7 +129,7 @@ export default function ArticleCard({
 
         <div className="flex items-center justify-between pt-4 border-t border-slate-100 flex-wrap gap-2">
           <div className="flex gap-2">
-            <button
+            {/* <button
               type="button"
               onClick={onToggleLike}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${liked ? "bg-red-50 text-red-600 border-red-200" : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-red-50 hover:text-red-500 hover:border-red-200"}`}
@@ -142,7 +148,7 @@ export default function ArticleCard({
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border transition-all ${saved ? "bg-amber-50 text-amber-600 border-amber-200" : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-amber-50 hover:text-amber-500 hover:border-amber-200"}`}
             >
               <Bookmark size={12} /> {saved ? "Saved" : "Save"}
-            </button>
+            </button> */}
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs text-slate-400 font-semibold">Share:</span>
