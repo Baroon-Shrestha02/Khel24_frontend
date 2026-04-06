@@ -84,7 +84,7 @@ export default function CategoryBlogsView({
   const restBlogs = blogs.slice(1);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 mb-8">
       <div className="container mx-auto px-4 sm:px-6">
         {/* ── Category Header ── */}
         <div className="pt-8 pb-6">

@@ -20,7 +20,6 @@ import Dashboard from "./Pages/Dashboard";
 import ProtectedRoutes from "./Routes/ProtectedRoutes";
 import PublicRoute from "./Routes/PublicRoutes";
 import DashBlogs from "./Components/AdminDashboard/BlogDashboard/DashBlogs";
-import DashStories from "./Components/AdminDashboard/DashStories/DashStories";
 import DashUsers from "./Components/AdminDashboard/DashUsers/DashUsers";
 import DashCards from "./Components/AdminDashboard/DashMain/DashCards";
 import BlogBrowse from "./Components/BlogComponents/Components/BlogsBrowse";
@@ -37,7 +36,6 @@ function App() {
           <Route path="/" element={<BlogPage />} />
           <Route path="/browse" element={<BlogBrowse />} />
           <Route path="/blog/:id" element={<BlogsDescription />} />
-          <Route path="/blogs/:id" element={<BlogsDescription />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/story" element={<StoryModal />} />
           <Route path="/football" element={<FootballBlogPage />} />
@@ -52,7 +50,6 @@ function App() {
         <Route element={<ProtectedRoutes />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard-blogs" element={<DashBlogs />} />
-          <Route path="/dashboard-stories" element={<DashStories />} />
           <Route path="/dashboard-users" element={<DashUsers />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
@@ -64,3 +61,5 @@ function App() {
 }
 
 export default App;
+
+// tinyMCE API = cwz1j236z0bufuse546551xtigm4huwggkfm2ogopjc0rskh

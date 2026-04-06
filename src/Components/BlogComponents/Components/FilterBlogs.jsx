@@ -1,57 +1,53 @@
-import { useState } from "react";
-import {
-  Search,
-  SlidersHorizontal,
-  ChevronDown,
-  HelpCircle,
-} from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Search, SlidersHorizontal, ChevronDown } from "lucide-react";
 
-const CATEGORIES = [
-  "All Category",
-  "UI/UX Design",
-  "Machine Learning",
-  "Marketing",
-  "Gaming",
-  "Design",
-  "Janitor",
-  "Another One",
-  "Thing",
-  "Human Resources",
-];
-
-const FILTER_OPTIONS = ["Most Recent", "Most Popular", "Oldest First", "A–Z"];
+const CATEGORIES = ["All Blogs", "Football", "Cricket", "Others"];
+const SORT_OPTIONS = ["Most Recent", "Oldest First"];
 
 export default function FilterBlogs({
   onSearch,
   onCategoryChange,
-  onFilterChange,
+  onSortChange,
 }) {
   const [search, setSearch] = useState("");
-  const [activeCategory, setActiveCategory] = useState("All Category");
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All Blogs");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedSort, setSelectedSort] = useState("");
+  const dropdownRef = useRef(null);
 
-  const handleSearch = (e) => {
-    setSearch(e.target.value);
-    onSearch?.(e.target.value);
-  };
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Debounced search
+  useEffect(() => {
+    const timeout = setTimeout(() => onSearch?.(search), 300);
+    return () => clearTimeout(timeout);
+  }, [search, onSearch]);
 
   const handleCategory = (cat) => {
     setActiveCategory(cat);
     onCategoryChange?.(cat);
   };
 
-  const handleFilter = (opt) => {
-    setSelectedFilter(opt);
-    setFilterOpen(false);
-    onFilterChange?.(opt);
+  const handleSort = (opt) => {
+    setSelectedSort(opt);
+    setDropdownOpen(false);
+    onSortChange?.(opt);
   };
 
   return (
     <aside className="w-full flex flex-col gap-7">
       {/* Search */}
       <div className="flex flex-col gap-2">
-        <label className="text-[13px] font-medium text-slate-500">Label</label>
+        <label className="text-[13px] font-medium text-slate-500">Search</label>
         <div className="relative flex items-center">
           <Search
             size={14}
@@ -61,43 +57,43 @@ export default function FilterBlogs({
             type="text"
             placeholder="Search article..."
             value={search}
-            onChange={handleSearch}
-            className="w-full h-11 pl-9 pr-9 border border-slate-200 rounded-full text-[13.5px] text-slate-700 placeholder:text-slate-400 bg-white outline-none focus:border-violet-500 transition-colors"
-          />
-          <HelpCircle
-            size={14}
-            className="absolute right-3.5 text-slate-400 cursor-pointer"
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full h-11 pl-9 pr-4 border border-slate-200 rounded-full text-[13.5px] text-slate-700 placeholder:text-slate-400 bg-white outline-none focus:border-violet-500 transition-colors"
           />
         </div>
       </div>
 
-      {/* Filter dropdown */}
+      {/* Sort dropdown */}
       <div className="flex flex-col gap-2">
-        <label className="text-[13px] font-medium text-slate-500">Filter</label>
-        <div className="relative">
+        <label className="text-[13px] font-medium text-slate-500">
+          Sort By
+        </label>
+        <div className="relative" ref={dropdownRef}>
           <button
-            onClick={() => setFilterOpen((p) => !p)}
+            onClick={() => setDropdownOpen((p) => !p)}
             className="w-full h-11 px-4 flex items-center gap-2.5 border border-slate-200 rounded-full text-[13.5px] bg-white cursor-pointer hover:border-slate-300 transition-colors"
           >
             <SlidersHorizontal size={14} className="text-slate-500 shrink-0" />
-            <span className="flex-1 text-left text-slate-400">
-              {selectedFilter || "Filter article..."}
+            <span
+              className={`flex-1 text-left ${selectedSort ? "text-slate-700" : "text-slate-400"}`}
+            >
+              {selectedSort || "Sort articles..."}
             </span>
             <ChevronDown
               size={14}
-              className={`text-slate-500 shrink-0 transition-transform duration-200 ${filterOpen ? "rotate-180" : ""}`}
+              className={`text-slate-500 shrink-0 transition-transform duration-200 ${dropdownOpen ? "rotate-180" : ""}`}
             />
           </button>
 
-          {filterOpen && (
+          {dropdownOpen && (
             <ul className="absolute top-[calc(100%+6px)] left-0 right-0 bg-white border border-slate-200 rounded-2xl shadow-lg z-50 p-1 list-none">
-              {FILTER_OPTIONS.map((opt) => (
+              {SORT_OPTIONS.map((opt) => (
                 <li
                   key={opt}
-                  onClick={() => handleFilter(opt)}
+                  onClick={() => handleSort(opt)}
                   className={`px-3.5 py-2.5 rounded-xl text-[13.5px] cursor-pointer transition-colors
                     ${
-                      selectedFilter === opt
+                      selectedSort === opt
                         ? "bg-violet-50 text-violet-700 font-medium"
                         : "text-slate-700 hover:bg-slate-50"
                     }`}

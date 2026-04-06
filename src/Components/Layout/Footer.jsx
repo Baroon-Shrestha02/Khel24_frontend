@@ -99,9 +99,7 @@ export default function Footer() {
           {/* Brand Column */}
           <motion.div variants={colVariants}>
             <Link to="/" className="inline-block mb-3">
-              <Link to="/" className="flex items-center">
-                <img src="/main/logobg.png" alt="KhelLive24" className="h-20" />
-              </Link>
+              <img src="/main/logobg.png" alt="KhelLive24" className="h-20" />
             </Link>
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
               Your daily source for sports news, live scores, match analysis,
